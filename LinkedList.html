@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7.1 Linked List</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#222;font-family:Arial,Helvetica,sans-serif;line-height:1.65;font-size:16px}
+a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}
+.topbar{background:#1f2937;color:#fff;padding:14px 22px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.topbar .brand{font-weight:700;margin-right:18px}.topbar a{color:#e5e7eb;margin-right:12px;font-size:14px}.topbar a:hover{color:#fff}
+.container{max-width:980px;margin:28px auto;padding:0 18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:28px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+h1,h2,h3,h4{line-height:1.25;color:#111827;margin-top:1.2em;margin-bottom:.55em}h1{font-size:30px;border-bottom:2px solid #e5e7eb;padding-bottom:12px;margin-top:0}h2{font-size:24px;border-bottom:1px solid #eceff3;padding-bottom:8px}h3{font-size:20px}
+p{margin:0 0 14px}ul,ol{padding-left:24px;margin-top:8px;margin-bottom:16px}li{margin:4px 0}
+pre{background:#111827;color:#f9fafb;border-radius:10px;padding:16px;overflow:auto;line-height:1.5;margin:16px 0;font-size:14px;border:1px solid #0f172a}code{font-family:Consolas,'Courier New',monospace;font-size:.95em}
+:not(pre)>code{background:#eef2f7;color:#111827;padding:2px 5px;border-radius:5px}
+.cell{margin:18px 0}.code-title{font-size:13px;font-weight:700;color:#4b5563;margin-bottom:6px}.output{background:#f9fafb;border-left:4px solid #94a3b8;padding:12px 14px;border-radius:8px;margin:10px 0;overflow:auto}.output pre{background:transparent;color:#111827;border:0;padding:0;margin:0;white-space:pre-wrap}
+.err{border-left-color:#ef4444;background:#fff1f2;color:#7f1d1d}blockquote{border-left:4px solid #d1d5db;margin:16px 0;padding:10px 16px;background:#f9fafb;color:#374151}
+table{border-collapse:collapse;width:100%;margin:16px 0;display:block;overflow-x:auto}th,td{border:1px solid #d1d5db;padding:8px 10px;text-align:left}th{background:#f3f4f6}
+img{max-width:100%;height:auto;border-radius:8px;margin:10px 0}.footer{text-align:center;color:#6b7280;font-size:13px;padding:24px 0}.page-title{font-size:14px;color:#6b7280;margin-bottom:10px}
+@media(max-width:700px){.container{margin:14px auto;padding:0 12px}.card{padding:18px;border-radius:10px}.topbar{padding:12px 14px}.topbar a{display:inline-block;margin-top:6px}h1{font-size:25px}h2{font-size:21px}pre{font-size:13px;padding:12px}}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="index.html">Home/index</a></div>
+<main class="container">
+<section class="card">
+<div class="cell markdown"><h1>7.1 Linked List</h1>
+<p><strong>Linked List</strong> adalah struktur data linear yang menyimpan data dalam bentuk rangkaian node.
+Setiap node menyimpan <strong>data</strong> dan <strong>alamat/pointer</strong> menuju node berikutnya.</p>
+<p>Pada catatan ini, materi yang dibahas meliputi:</p>
+<ol>
+<li>Pengertian linked list</li>
+<li>Struktur node</li>
+<li>Perbedaan linked list dan array</li>
+<li>Singly linked list</li>
+<li>Operasi dasar: <code>isEmpty</code>, <code>add</code>, <code>show</code>, <code>size</code>, <code>search</code>, dan <code>remove</code></li>
+<li>Doubly linked list</li>
+<li>Kelebihan, kekurangan, dan kompleksitas linked list</li>
+</ol>
+</div><div class="cell markdown"><h2>Pengertian Linked List</h2>
+<p><strong>Linked List</strong> adalah kumpulan data yang saling terhubung menggunakan pointer atau referensi.
+Berbeda dengan array, data pada linked list tidak harus disimpan di alamat memori yang berurutan.</p>
+<p>Setiap elemen pada linked list disebut <strong>node</strong>. Sebuah node biasanya memiliki dua bagian utama:</p>
+<ol>
+<li><strong>Data</strong>: nilai yang disimpan di dalam node.</li>
+<li><strong>Next</strong>: pointer atau referensi menuju node berikutnya.</li>
+</ol>
+<p>Bentuk sederhananya:</p>
+<pre><code class="language-text">Head -&gt; 31 -&gt; 77 -&gt; 17 -&gt; None
+</code></pre>
+<p>Keterangan:</p>
+<ul>
+<li><code>Head</code> adalah penanda node pertama.</li>
+<li><code>31</code>, <code>77</code>, dan <code>17</code> adalah data yang tersimpan.</li>
+<li><code>None</code> menandakan akhir linked list.</li>
+</ul>
+</div><div class="cell markdown"><h2>Struktur Node</h2>
+<p>Node adalah bagian paling dasar dalam linked list.
+Tanpa node, linked list tidak dapat terbentuk.</p>
+<p>Struktur node pada <strong>singly linked list</strong>:</p>
+<pre><code class="language-text">+------+------+
+| data | next |
++------+------+
+</code></pre>
+<p>Contoh:</p>
+<pre><code class="language-text">+------+------+
+|  31  | next | ---&gt; node berikutnya
++------+------+
+</code></pre>
+<p>Jika sebuah node berada di akhir list, maka bagian <code>next</code> bernilai <code>None</code>.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Membuat class Node untuk singly linked list
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+    def getData(self):
+        return self.data
+
+    def getNext(self):
+        return self.next
+
+    def setData(self, newdata):
+        self.data = newdata
+
+    def setNext(self, newnext):
+        self.next = newnext</code></pre></div><div class="cell markdown"><h2>Penjelasan Class Node</h2>
+<pre><code class="language-python">class Node:
+</code></pre>
+<p>Bagian ini digunakan untuk membuat cetakan node.</p>
+<pre><code class="language-python">self.data = data
+</code></pre>
+<p>Digunakan untuk menyimpan nilai yang ada di dalam node.</p>
+<pre><code class="language-python">self.next = None
+</code></pre>
+<p>Digunakan untuk menyimpan alamat node berikutnya.
+Pada awal pembuatan node, nilai <code>next</code> diisi <code>None</code> karena node belum terhubung dengan node lain.</p>
+<p>Method <code>getData</code>, <code>getNext</code>, <code>setData</code>, dan <code>setNext</code> digunakan untuk mengambil atau mengubah isi node.</p>
+</div><div class="cell markdown"><h2>Perbedaan Linked List dan Array</h2>
+<table>
+<thead>
+<tr>
+  <th>Aspek</th>
+  <th>Linked List</th>
+  <th>Array/List Biasa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Letak data</td>
+  <td>Tidak harus berurutan di memori</td>
+  <td>Umumnya tersimpan berurutan</td>
+</tr>
+<tr>
+  <td>Akses data</td>
+  <td>Dilakukan secara berurutan dari head</td>
+  <td>Bisa langsung memakai indeks</td>
+</tr>
+<tr>
+  <td>Insert/delete</td>
+  <td>Lebih fleksibel karena cukup mengatur pointer</td>
+  <td>Bisa lebih berat karena perlu menggeser data</td>
+</tr>
+<tr>
+  <td>Kebutuhan tambahan</td>
+  <td>Membutuhkan pointer/referensi</td>
+  <td>Tidak membutuhkan pointer tambahan per elemen</td>
+</tr>
+</tbody>
+</table>
+<p>Linked list cocok digunakan ketika data sering ditambah atau dihapus.
+Namun, jika data sering diakses menggunakan indeks tertentu, array/list biasa biasanya lebih sederhana digunakan.</p>
+</div><div class="cell markdown"><h1>A. Singly Linked List</h1>
+<p><strong>Singly Linked List</strong> adalah linked list yang setiap node hanya memiliki satu pointer, yaitu pointer <code>next</code> menuju node berikutnya.</p>
+<p>Arah hubungannya hanya satu arah:</p>
+<pre><code class="language-text">Head -&gt; 31 -&gt; 77 -&gt; 17 -&gt; None
+</code></pre>
+<p>Karena arahnya satu arah, proses penelusuran data dimulai dari <code>head</code> lalu bergerak ke node berikutnya sampai bertemu <code>None</code>.</p>
+</div><div class="cell markdown"><h2>Membuat Class UnorderedList</h2>
+<p>Pada contoh ini, linked list dibuat dalam bentuk <strong>UnorderedList</strong>, yaitu list yang datanya tidak harus berurutan.</p>
+<p>Saat linked list masih kosong, <code>head</code> bernilai <code>None</code>.</p>
+<pre><code class="language-text">Head -&gt; None
+</code></pre>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Class dasar UnorderedList
+
+class UnorderedList:
+    def __init__(self):
+        self.head = None
+
+    def isEmpty(self):
+        return self.head == None
+
+    def show(self):
+        current = self.head
+        print(&quot;Head -&gt;&quot;, end=&quot; &quot;)
+
+        while current != None:
+            print(current.getData(), end=&quot; -&gt; &quot;)
+            current = current.getNext()
+
+        print(&quot;None&quot;)</code></pre></div><div class="cell markdown"><h2>Penjelasan <code>head</code>, <code>isEmpty</code>, dan <code>show</code></h2>
+<pre><code class="language-python">self.head = None
+</code></pre>
+<p>Digunakan untuk menandai bahwa linked list masih kosong.</p>
+<pre><code class="language-python">return self.head == None
+</code></pre>
+<p>Digunakan untuk mengecek apakah list kosong atau tidak.</p>
+<pre><code class="language-python">current = self.head
+</code></pre>
+<p>Variabel <code>current</code> digunakan untuk melakukan traversal atau penelusuran node dari awal sampai akhir.</p>
+<pre><code class="language-python">while current != None:
+</code></pre>
+<p>Perulangan berjalan selama node yang sedang dicek belum mencapai akhir linked list.</p>
+</div><div class="cell markdown"><h2>Operasi Add pada Linked List</h2>
+<p>Operasi <code>add</code> digunakan untuk menambahkan node baru.
+Pada contoh ini, data baru dimasukkan di bagian depan list, tepat setelah <code>Head</code>.</p>
+<p>Misalnya list awal:</p>
+<pre><code class="language-text">Head -&gt; None
+</code></pre>
+<p>Setelah <code>add(31)</code>:</p>
+<pre><code class="language-text">Head -&gt; 31 -&gt; None
+</code></pre>
+<p>Setelah <code>add(77)</code>:</p>
+<pre><code class="language-text">Head -&gt; 77 -&gt; 31 -&gt; None
+</code></pre>
+<p>Data baru menjadi node pertama karena <code>head</code> dipindahkan ke node baru.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Menambahkan method add ke dalam class UnorderedList
+
+class UnorderedList:
+    def __init__(self):
+        self.head = None
+
+    def isEmpty(self):
+        return self.head == None
+
+    def show(self):
+        current = self.head
+        print(&quot;Head -&gt;&quot;, end=&quot; &quot;)
+
+        while current != None:
+            print(current.getData(), end=&quot; -&gt; &quot;)
+            current = current.getNext()
+
+        print(&quot;None&quot;)
+
+    def add(self, item):
+        temp = Node(item)
+        temp.setNext(self.head)
+        self.head = temp</code></pre></div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh penggunaan add
+
+mylist = UnorderedList()
+
+mylist.show()
+mylist.add(31)
+mylist.show()
+mylist.add(77)
+mylist.show()
+mylist.add(17)
+mylist.show()</code></pre><div class="output"><pre>Head -&gt; None
+Head -&gt; 31 -&gt; None
+Head -&gt; 77 -&gt; 31 -&gt; None
+Head -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Operasi Add</h2>
+<pre><code class="language-python">temp = Node(item)
+</code></pre>
+<p>Membuat node baru yang berisi data <code>item</code>.</p>
+<pre><code class="language-python">temp.setNext(self.head)
+</code></pre>
+<p>Node baru diarahkan ke node yang sebelumnya menjadi <code>head</code>.</p>
+<pre><code class="language-python">self.head = temp
+</code></pre>
+<p><code>head</code> dipindahkan ke node baru.
+Dengan cara ini, data baru selalu masuk dari depan linked list.</p>
+</div><div class="cell markdown"><h2>Traversal pada Linked List</h2>
+<p><strong>Traversal</strong> adalah proses menelusuri node satu per satu dari <code>head</code> sampai <code>None</code>.</p>
+<p>Traversal digunakan pada banyak operasi, misalnya:</p>
+<ol>
+<li>Menampilkan isi linked list</li>
+<li>Menghitung jumlah node</li>
+<li>Mencari data</li>
+<li>Menghapus data tertentu</li>
+</ol>
+<p>Contoh alur traversal:</p>
+<pre><code class="language-text">Head -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+        ↑
+     current
+</code></pre>
+<p>Setelah satu langkah:</p>
+<pre><code class="language-text">Head -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+              ↑
+           current
+</code></pre>
+</div><div class="cell markdown"><h2>Operasi Size</h2>
+<p>Operasi <code>size</code> digunakan untuk menghitung jumlah node dalam linked list.</p>
+<p>Cara kerjanya:</p>
+<ol>
+<li>Mulai dari <code>head</code>.</li>
+<li>Siapkan variabel <code>count = 0</code>.</li>
+<li>Selama node belum <code>None</code>, tambahkan <code>count</code>.</li>
+<li>Geser <code>current</code> ke node berikutnya.</li>
+<li>Jika sudah sampai <code>None</code>, kembalikan nilai <code>count</code>.</li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Menambahkan method size
+
+class UnorderedList:
+    def __init__(self):
+        self.head = None
+
+    def isEmpty(self):
+        return self.head == None
+
+    def show(self):
+        current = self.head
+        print(&quot;Head -&gt;&quot;, end=&quot; &quot;)
+
+        while current != None:
+            print(current.getData(), end=&quot; -&gt; &quot;)
+            current = current.getNext()
+
+        print(&quot;None&quot;)
+
+    def add(self, item):
+        temp = Node(item)
+        temp.setNext(self.head)
+        self.head = temp
+
+    def size(self):
+        current = self.head
+        count = 0
+
+        while current != None:
+            count = count + 1
+            current = current.getNext()
+
+        return count</code></pre></div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh penggunaan size
+
+mylist = UnorderedList()
+mylist.add(31)
+mylist.add(77)
+mylist.add(17)
+mylist.add(93)
+
+mylist.show()
+print(&quot;Jumlah node:&quot;, mylist.size())</code></pre><div class="output"><pre>Head -&gt; 93 -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+Jumlah node: 4
+</pre></div></div><div class="cell markdown"><h2>Operasi Search</h2>
+<p>Operasi <code>search</code> digunakan untuk mencari apakah suatu data ada di dalam linked list.</p>
+<p>Cara kerjanya:</p>
+<ol>
+<li>Mulai dari <code>head</code>.</li>
+<li>Siapkan variabel <code>found = False</code>.</li>
+<li>Bandingkan data pada node saat ini dengan data yang dicari.</li>
+<li>Jika sama, ubah <code>found</code> menjadi <code>True</code>.</li>
+<li>Jika tidak sama, lanjut ke node berikutnya.</li>
+<li>Jika sampai akhir tidak ditemukan, hasilnya tetap <code>False</code>.</li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Menambahkan method search
+
+class UnorderedList:
+    def __init__(self):
+        self.head = None
+
+    def isEmpty(self):
+        return self.head == None
+
+    def show(self):
+        current = self.head
+        print(&quot;Head -&gt;&quot;, end=&quot; &quot;)
+
+        while current != None:
+            print(current.getData(), end=&quot; -&gt; &quot;)
+            current = current.getNext()
+
+        print(&quot;None&quot;)
+
+    def add(self, item):
+        temp = Node(item)
+        temp.setNext(self.head)
+        self.head = temp
+
+    def size(self):
+        current = self.head
+        count = 0
+
+        while current != None:
+            count = count + 1
+            current = current.getNext()
+
+        return count
+
+    def search(self, item):
+        current = self.head
+        found = False
+        looping = 0
+
+        while current != None and not found:
+            looping = looping + 1
+            print(&quot;Looping ke-&quot;, looping)
+            print(&quot;Data yang dicek:&quot;, current.getData())
+
+            if current.getData() == item:
+                found = True
+                print(&quot;Status: data ditemukan&quot;)
+            else:
+                current = current.getNext()
+                print(&quot;Status: data belum ditemukan&quot;)
+
+            print()
+
+        return found</code></pre></div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh penggunaan search
+
+mylist = UnorderedList()
+mylist.add(31)
+mylist.add(77)
+mylist.add(17)
+mylist.add(93)
+
+mylist.show()
+hasil = mylist.search(77)
+print(&quot;Hasil pencarian:&quot;, hasil)</code></pre><div class="output"><pre>Head -&gt; 93 -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+Looping ke- 1
+Data yang dicek: 93
+Status: data belum ditemukan
+
+Looping ke- 2
+Data yang dicek: 17
+Status: data belum ditemukan
+
+Looping ke- 3
+Data yang dicek: 77
+Status: data ditemukan
+
+Hasil pencarian: True
+</pre></div></div><div class="cell markdown"><h2>Operasi Remove</h2>
+<p>Operasi <code>remove</code> digunakan untuk menghapus node yang berisi data tertentu.</p>
+<p>Pada operasi ini, diperlukan dua pointer:</p>
+<ol>
+<li><code>current</code>: node yang sedang diperiksa.</li>
+<li><code>previous</code>: node sebelum <code>current</code>.</li>
+</ol>
+<p>Jika data ditemukan, hubungan pointer akan diubah agar node yang dihapus tidak lagi dilewati.</p>
+<p>Contoh:</p>
+<pre><code class="language-text">Head -&gt; 93 -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+</code></pre>
+<p>Jika data <code>77</code> dihapus:</p>
+<pre><code class="language-text">Head -&gt; 93 -&gt; 17 -&gt; 31 -&gt; None
+</code></pre>
+<p>Node <code>17</code> langsung diarahkan ke node <code>31</code>.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Class UnorderedList lengkap dengan remove
+
+class UnorderedList:
+    def __init__(self):
+        self.head = None
+
+    def isEmpty(self):
+        return self.head == None
+
+    def show(self):
+        current = self.head
+        print(&quot;Head -&gt;&quot;, end=&quot; &quot;)
+
+        while current != None:
+            print(current.getData(), end=&quot; -&gt; &quot;)
+            current = current.getNext()
+
+        print(&quot;None&quot;)
+
+    def add(self, item):
+        temp = Node(item)
+        temp.setNext(self.head)
+        self.head = temp
+
+    def size(self):
+        current = self.head
+        count = 0
+
+        while current != None:
+            count = count + 1
+            current = current.getNext()
+
+        return count
+
+    def search(self, item):
+        current = self.head
+        found = False
+
+        while current != None and not found:
+            if current.getData() == item:
+                found = True
+            else:
+                current = current.getNext()
+
+        return found
+
+    def remove(self, item):
+        current = self.head
+        previous = None
+        found = False
+
+        while current != None and not found:
+            if current.getData() == item:
+                found = True
+            else:
+                previous = current
+                current = current.getNext()
+
+        if found == False:
+            print(&quot;Data&quot;, item, &quot;tidak ada di dalam list&quot;)
+        elif previous == None:
+            self.head = current.getNext()
+            print(&quot;Data&quot;, item, &quot;berhasil dihapus dari head&quot;)
+        else:
+            previous.setNext(current.getNext())
+            print(&quot;Data&quot;, item, &quot;berhasil dihapus&quot;)</code></pre></div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh penggunaan remove
+
+mylist = UnorderedList()
+mylist.add(31)
+mylist.add(77)
+mylist.add(17)
+mylist.add(93)
+
+print(&quot;Sebelum remove:&quot;)
+mylist.show()
+
+mylist.remove(77)
+
+print(&quot;Setelah remove:&quot;)
+mylist.show()</code></pre><div class="output"><pre>Sebelum remove:
+Head -&gt; 93 -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+Data 77 berhasil dihapus
+Setelah remove:
+Head -&gt; 93 -&gt; 17 -&gt; 31 -&gt; None
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Remove</h2>
+<pre><code class="language-python">previous = None
+</code></pre>
+<p>Pada awal pencarian, belum ada node sebelum <code>head</code>, sehingga <code>previous</code> bernilai <code>None</code>.</p>
+<pre><code class="language-python">previous = current
+current = current.getNext()
+</code></pre>
+<p>Jika data belum ditemukan, <code>previous</code> digeser ke node saat ini, lalu <code>current</code> digeser ke node berikutnya.</p>
+<pre><code class="language-python">self.head = current.getNext()
+</code></pre>
+<p>Digunakan jika data yang dihapus berada pada node pertama.</p>
+<pre><code class="language-python">previous.setNext(current.getNext())
+</code></pre>
+<p>Digunakan jika data yang dihapus berada di tengah atau akhir linked list.
+Pointer dari node sebelumnya langsung diarahkan ke node setelah node yang dihapus.</p>
+</div><div class="cell markdown"><h1>B. Doubly Linked List</h1>
+<p><strong>Doubly Linked List</strong> adalah linked list yang setiap node memiliki dua pointer:</p>
+<ol>
+<li><code>next</code>: menuju node berikutnya.</li>
+<li><code>prev</code>: menuju node sebelumnya.</li>
+</ol>
+<p>Bentuknya:</p>
+<pre><code class="language-text">None &lt;- Head -&gt; 100 &lt;-&gt; 10 &lt;-&gt; 15 -&gt; None
+</code></pre>
+<p>Doubly linked list lebih fleksibel karena dapat ditelusuri dari dua arah, tetapi setiap node membutuhkan satu pointer tambahan.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Membuat node untuk doubly linked list
+
+class DoubleNode:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+        self.prev = None
+
+    def getData(self):
+        return self.data
+
+    def getNext(self):
+        return self.next
+
+    def getPrev(self):
+        return self.prev
+
+    def setData(self, newdata):
+        self.data = newdata
+
+    def setNext(self, newnext):
+        self.next = newnext
+
+    def setPrev(self, newprev):
+        self.prev = newprev</code></pre></div><div class="cell markdown"><h2>Add pada Doubly Linked List</h2>
+<p>Pada doubly linked list, saat menambahkan node di depan, ada dua hubungan pointer yang perlu diperhatikan:</p>
+<ol>
+<li>Node baru mengarah ke <code>head</code> lama melalui <code>next</code>.</li>
+<li>Jika <code>head</code> lama tidak kosong, maka <code>prev</code> dari <code>head</code> lama harus mengarah ke node baru.</li>
+</ol>
+<p>Alurnya:</p>
+<pre><code class="language-text">Node baru -&gt; head lama
+head lama.prev -&gt; node baru
+head -&gt; node baru
+</code></pre>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Class DoublyLinkedList
+
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def isEmpty(self):
+        return self.head == None
+
+    def show(self):
+        current = self.head
+        print(&quot;None &lt;- Head -&gt;&quot;, end=&quot; &quot;)
+
+        while current != None:
+            if current.getNext() == None:
+                print(current.getData(), end=&quot; -&gt; &quot;)
+            else:
+                print(current.getData(), end=&quot; &lt;-&gt; &quot;)
+            current = current.getNext()
+
+        print(&quot;None&quot;)
+
+    def add(self, item):
+        temp = DoubleNode(item)
+        temp.setNext(self.head)
+        temp.setPrev(None)
+
+        if self.head != None:
+            self.head.setPrev(temp)
+
+        self.head = temp
+
+    def size(self):
+        current = self.head
+        count = 0
+
+        while current != None:
+            count = count + 1
+            current = current.getNext()
+
+        return count
+
+    def search(self, item):
+        current = self.head
+        found = False
+
+        while current != None and not found:
+            if current.getData() == item:
+                found = True
+            else:
+                current = current.getNext()
+
+        return found
+
+    def remove(self, item):
+        current = self.head
+        found = False
+
+        while current != None and not found:
+            if current.getData() == item:
+                found = True
+            else:
+                current = current.getNext()
+
+        if found == False:
+            print(&quot;Data&quot;, item, &quot;tidak ada di dalam list&quot;)
+            return
+
+        previous_node = current.getPrev()
+        next_node = current.getNext()
+
+        if previous_node == None:
+            self.head = next_node
+        else:
+            previous_node.setNext(next_node)
+
+        if next_node != None:
+            next_node.setPrev(previous_node)
+
+        print(&quot;Data&quot;, item, &quot;berhasil dihapus&quot;)</code></pre></div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh doubly linked list
+
+mydouble = DoublyLinkedList()
+
+mydouble.show()
+mydouble.add(15)
+mydouble.add(10)
+mydouble.add(100)
+mydouble.show()
+
+print(&quot;Jumlah node:&quot;, mydouble.size())
+print(&quot;Apakah 10 ada?&quot;, mydouble.search(10))
+
+mydouble.remove(10)
+mydouble.show()</code></pre><div class="output"><pre>None &lt;- Head -&gt; None
+None &lt;- Head -&gt; 100 &lt;-&gt; 10 &lt;-&gt; 15 -&gt; None
+Jumlah node: 3
+Apakah 10 ada? True
+Data 10 berhasil dihapus
+None &lt;- Head -&gt; 100 &lt;-&gt; 15 -&gt; None
+</pre></div></div><div class="cell markdown"><h2>Perbedaan Singly dan Doubly Linked List</h2>
+<table>
+<thead>
+<tr>
+  <th>Aspek</th>
+  <th>Singly Linked List</th>
+  <th>Doubly Linked List</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Pointer</td>
+  <td>Hanya <code>next</code></td>
+  <td>Memiliki <code>next</code> dan <code>prev</code></td>
+</tr>
+<tr>
+  <td>Arah traversal</td>
+  <td>Satu arah</td>
+  <td>Dua arah</td>
+</tr>
+<tr>
+  <td>Penggunaan memori</td>
+  <td>Lebih hemat</td>
+  <td>Lebih besar karena ada <code>prev</code></td>
+</tr>
+<tr>
+  <td>Penghapusan node</td>
+  <td>Perlu bantuan node sebelumnya</td>
+  <td>Lebih mudah karena ada <code>prev</code></td>
+</tr>
+<tr>
+  <td>Struktur</td>
+  <td>Lebih sederhana</td>
+  <td>Lebih kompleks</td>
+</tr>
+</tbody>
+</table>
+<p>Singly linked list cocok untuk materi dasar karena strukturnya lebih sederhana.
+Doubly linked list cocok ketika program membutuhkan akses maju dan mundur antar node.</p>
+</div><div class="cell markdown"><h1>C. Kompleksitas Linked List</h1>
+<table>
+<thead>
+<tr>
+  <th>Operasi</th>
+  <th style="text-align:right">Kompleksitas</th>
+  <th>Keterangan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Menambah di depan</td>
+  <td style="text-align:right">O(1)</td>
+  <td>Cukup mengubah <code>head</code></td>
+</tr>
+<tr>
+  <td>Menampilkan semua data</td>
+  <td style="text-align:right">O(n)</td>
+  <td>Harus traversal semua node</td>
+</tr>
+<tr>
+  <td>Menghitung jumlah node</td>
+  <td style="text-align:right">O(n)</td>
+  <td>Harus mengecek dari awal sampai akhir</td>
+</tr>
+<tr>
+  <td>Mencari data</td>
+  <td style="text-align:right">O(n)</td>
+  <td>Data dicek satu per satu</td>
+</tr>
+<tr>
+  <td>Menghapus data tertentu</td>
+  <td style="text-align:right">O(n)</td>
+  <td>Perlu mencari data terlebih dahulu</td>
+</tr>
+</tbody>
+</table>
+<p>Keterangan:</p>
+<ul>
+<li><code>O(1)</code> berarti waktu proses tetap, tidak bergantung jumlah data.</li>
+<li><code>O(n)</code> berarti waktu proses dapat bertambah sesuai jumlah node.</li>
+</ul>
+</div><div class="cell markdown"><h1>D. Kelebihan dan Kekurangan Linked List</h1>
+<h2>Kelebihan</h2>
+<ol>
+<li>Ukuran data lebih fleksibel karena node dapat ditambah atau dihapus.</li>
+<li>Insert dan delete lebih mudah dilakukan, terutama di bagian depan.</li>
+<li>Tidak harus menyimpan data secara berurutan di memori.</li>
+<li>Cocok untuk membuat struktur data lain seperti stack dan queue.</li>
+</ol>
+<h2>Kekurangan</h2>
+<ol>
+<li>Tidak bisa mengakses data langsung menggunakan indeks seperti array.</li>
+<li>Pencarian data membutuhkan traversal dari <code>head</code>.</li>
+<li>Membutuhkan memori tambahan untuk pointer.</li>
+<li>Kode implementasinya lebih panjang dibanding list biasa.</li>
+</ol>
+</div><div class="cell markdown"><h1>E. Latihan Singkat</h1>
+<h2>Soal 1</h2>
+<p>Buat linked list dengan data berikut menggunakan method <code>add</code>:</p>
+<pre><code class="language-python">31, 77, 17, 93
+</code></pre>
+<p>Tampilkan isi linked list setelah semua data dimasukkan.</p>
+<h2>Jawaban 1</h2>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code>latihan = UnorderedList()
+latihan.add(31)
+latihan.add(77)
+latihan.add(17)
+latihan.add(93)
+
+latihan.show()</code></pre><div class="output"><pre>Head -&gt; 93 -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+</pre></div></div><div class="cell markdown"><p>Karena method <code>add</code> memasukkan data dari depan, maka urutan akhirnya menjadi:</p>
+<pre><code class="language-text">Head -&gt; 93 -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+</code></pre>
+</div><div class="cell markdown"><h2>Soal 2</h2>
+<p>Dari linked list berikut:</p>
+<pre><code class="language-text">Head -&gt; 93 -&gt; 17 -&gt; 77 -&gt; 31 -&gt; None
+</code></pre>
+<p>Hapus data <code>17</code>, lalu tampilkan hasilnya.</p>
+<h2>Jawaban 2</h2>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code>latihan.remove(17)
+latihan.show()</code></pre><div class="output"><pre>Data 17 berhasil dihapus
+Head -&gt; 93 -&gt; 77 -&gt; 31 -&gt; None
+</pre></div></div><div class="cell markdown"><p>Setelah data <code>17</code> dihapus, node <code>93</code> akan langsung menunjuk ke node <code>77</code>.</p>
+<p>Hasil akhir:</p>
+<pre><code class="language-text">Head -&gt; 93 -&gt; 77 -&gt; 31 -&gt; None
+</code></pre>
+</div><div class="cell markdown"><h2>Soal 3</h2>
+<p>Jelaskan perbedaan utama <code>next</code> dan <code>prev</code> pada doubly linked list.</p>
+<h2>Jawaban 3</h2>
+<p><code>next</code> digunakan untuk menunjuk node berikutnya, sedangkan <code>prev</code> digunakan untuk menunjuk node sebelumnya.
+Pada singly linked list hanya ada <code>next</code>, sedangkan pada doubly linked list ada <code>next</code> dan <code>prev</code>.</p>
+</div><div class="cell markdown"><h1>Kesimpulan</h1>
+<p>Linked list adalah struktur data linear yang terdiri dari beberapa node yang saling terhubung.
+Setiap node menyimpan data dan pointer ke node berikutnya.
+Pada singly linked list, node hanya memiliki pointer <code>next</code>, sedangkan pada doubly linked list node memiliki pointer <code>next</code> dan <code>prev</code>.</p>
+<p>Operasi dasar linked list meliputi menambah data, menampilkan data, menghitung jumlah node, mencari data, dan menghapus data.
+Linked list sangat berguna ketika data sering berubah, tetapi kurang cocok jika data harus sering diakses langsung berdasarkan indeks.</p>
+</div><div class="cell markdown"><h1>Referensi</h1>
+<ol>
+<li>GeeksforGeeks. <strong>Linked List Data Structure</strong>.</li>
+<li>Materi PPT <strong>Link List</strong>.</li>
+</ol>
+</div>
+</section>
+<div class="footer">C.2026 - Moch. Habdulbar</div>
+</main>
+</body>
+</html>

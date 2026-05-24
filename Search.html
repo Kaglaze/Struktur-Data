@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5.1 Searching</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#222;font-family:Arial,Helvetica,sans-serif;line-height:1.65;font-size:16px}
+a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}
+.topbar{background:#1f2937;color:#fff;padding:14px 22px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.topbar .brand{font-weight:700;margin-right:18px}.topbar a{color:#e5e7eb;margin-right:12px;font-size:14px}.topbar a:hover{color:#fff}
+.container{max-width:980px;margin:28px auto;padding:0 18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:28px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+h1,h2,h3,h4{line-height:1.25;color:#111827;margin-top:1.2em;margin-bottom:.55em}h1{font-size:30px;border-bottom:2px solid #e5e7eb;padding-bottom:12px;margin-top:0}h2{font-size:24px;border-bottom:1px solid #eceff3;padding-bottom:8px}h3{font-size:20px}
+p{margin:0 0 14px}ul,ol{padding-left:24px;margin-top:8px;margin-bottom:16px}li{margin:4px 0}
+pre{background:#111827;color:#f9fafb;border-radius:10px;padding:16px;overflow:auto;line-height:1.5;margin:16px 0;font-size:14px;border:1px solid #0f172a}code{font-family:Consolas,'Courier New',monospace;font-size:.95em}
+:not(pre)>code{background:#eef2f7;color:#111827;padding:2px 5px;border-radius:5px}
+.cell{margin:18px 0}.code-title{font-size:13px;font-weight:700;color:#4b5563;margin-bottom:6px}.output{background:#f9fafb;border-left:4px solid #94a3b8;padding:12px 14px;border-radius:8px;margin:10px 0;overflow:auto}.output pre{background:transparent;color:#111827;border:0;padding:0;margin:0;white-space:pre-wrap}
+.err{border-left-color:#ef4444;background:#fff1f2;color:#7f1d1d}blockquote{border-left:4px solid #d1d5db;margin:16px 0;padding:10px 16px;background:#f9fafb;color:#374151}
+table{border-collapse:collapse;width:100%;margin:16px 0;display:block;overflow-x:auto}th,td{border:1px solid #d1d5db;padding:8px 10px;text-align:left}th{background:#f3f4f6}
+img{max-width:100%;height:auto;border-radius:8px;margin:10px 0}.footer{text-align:center;color:#6b7280;font-size:13px;padding:24px 0}.page-title{font-size:14px;color:#6b7280;margin-bottom:10px}
+@media(max-width:700px){.container{margin:14px auto;padding:0 12px}.card{padding:18px;border-radius:10px}.topbar{padding:12px 14px}.topbar a{display:inline-block;margin-top:6px}h1{font-size:25px}h2{font-size:21px}pre{font-size:13px;padding:12px}}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="index.html">Home/index</a></div>
+<main class="container">
+<section class="card">
+<div class="cell markdown"><h1>5.1 Searching</h1>
+<p>Data tidak hanya sekadar diinput, tetapi data juga sering perlu dicari kembali.
+Proses pencarian data disebut <strong>searching</strong>. Searching digunakan untuk menemukan apakah suatu data ada di dalam list atau array, serta mengetahui posisi atau indeks dari data tersebut.</p>
+<p>Pada materi ini, algoritma searching yang dibahas hanya:</p>
+<ol>
+<li>Linear Search pada data tidak terurut</li>
+<li>Linear Search pada data terurut</li>
+<li>Binary Search</li>
+</ol>
+</div><div class="cell markdown"><h2>Pengertian Searching</h2>
+<p><strong>Searching</strong> adalah proses untuk mencari suatu nilai tertentu di dalam kumpulan data.
+Kumpulan data tersebut dapat berupa list, array, tabel, atau struktur data lainnya.</p>
+<p>Contoh sederhana:</p>
+<pre><code class="language-python">data = [1, 7, 11, 23, 39, 43, 56]
+cari = 23
+</code></pre>
+<p>Dari contoh tersebut, program akan mencari apakah angka <code>23</code> ada di dalam list.
+Jika ada, program dapat menampilkan posisi atau indeks dari data tersebut.</p>
+</div><div class="cell markdown"><h1>A. Linear Search pada Data Tidak Terurut</h1>
+<h2>Pengertian Linear Search</h2>
+<p><strong>Linear Search</strong> atau <strong>Sequential Search</strong> adalah algoritma pencarian yang dilakukan dengan cara mengecek data satu per satu dari awal sampai akhir.</p>
+<p>Linear Search dapat digunakan pada:</p>
+<ol>
+<li>Data yang belum terurut</li>
+<li>Data yang sudah terurut</li>
+<li>Data dengan jumlah kecil</li>
+</ol>
+<p>Pada data tidak terurut, program tidak bisa menebak posisi data yang dicari.
+Oleh karena itu, program harus memeriksa elemen dari indeks pertama sampai data ditemukan atau sampai semua data selesai dicek.</p>
+</div><div class="cell markdown"><h2>Cara Kerja Linear Search Data Tidak Terurut</h2>
+<p>Misalnya terdapat list:</p>
+<pre><code class="language-python">data = [43, 11, 56, 1, 39, 7, 23]
+cari = 23
+</code></pre>
+<p>Langkah pencarian:</p>
+<ol>
+<li>Mulai dari indeks ke-0.</li>
+<li>Bandingkan data pada indeks tersebut dengan nilai yang dicari.</li>
+<li>Jika sama, pencarian berhenti.</li>
+<li>Jika tidak sama, lanjut ke indeks berikutnya.</li>
+<li>Jika sampai akhir tidak ditemukan, berarti data tidak ada di dalam list.</li>
+</ol>
+<p>Pada data tidak terurut, pencarian tidak boleh berhenti hanya karena nilai yang dicek lebih besar atau lebih kecil dari nilai yang dicari, karena susunan datanya masih acak.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Linear Search pada data tidak terurut
+
+search = 23
+myList = [43, 11, 56, 1, 39, 7, 23]
+
+found = False
+index = 0
+looping = 0
+
+while index &lt; len(myList) and not found:
+    looping += 1
+    print(&quot;Looping ke-&quot;, looping)
+    print(&quot;Cek indeks:&quot;, index)
+    print(&quot;Nilai yang dicek:&quot;, myList[index])
+
+    if myList[index] == search:
+        found = True
+        print(&quot;Status: data ditemukan&quot;)
+    else:
+        print(&quot;Status: data belum ditemukan&quot;)
+        index += 1
+
+    print()
+
+if found:
+    print(&quot;Hasil akhir: data&quot;, search, &quot;ditemukan pada indeks&quot;, index)
+    print(&quot;Jumlah looping:&quot;, looping)
+else:
+    print(&quot;Hasil akhir: data&quot;, search, &quot;tidak ditemukan&quot;)
+    print(&quot;Jumlah looping:&quot;, looping)</code></pre><div class="output"><pre>Looping ke- 1
+Cek indeks: 0
+Nilai yang dicek: 43
+Status: data belum ditemukan
+
+Looping ke- 2
+Cek indeks: 1
+Nilai yang dicek: 11
+Status: data belum ditemukan
+
+Looping ke- 3
+Cek indeks: 2
+Nilai yang dicek: 56
+Status: data belum ditemukan
+
+Looping ke- 4
+Cek indeks: 3
+Nilai yang dicek: 1
+Status: data belum ditemukan
+
+Looping ke- 5
+Cek indeks: 4
+Nilai yang dicek: 39
+Status: data belum ditemukan
+
+Looping ke- 6
+Cek indeks: 5
+Nilai yang dicek: 7
+Status: data belum ditemukan
+
+Looping ke- 7
+Cek indeks: 6
+Nilai yang dicek: 23
+Status: data ditemukan
+
+Hasil akhir: data 23 ditemukan pada indeks 6
+Jumlah looping: 7
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Kode Linear Search Tidak Terurut</h2>
+<pre><code class="language-python">search = 23
+</code></pre>
+<p>Variabel <code>search</code> berisi data yang ingin dicari.</p>
+<pre><code class="language-python">myList = [43, 11, 56, 1, 39, 7, 23]
+</code></pre>
+<p>Variabel <code>myList</code> berisi kumpulan data yang akan diperiksa.</p>
+<pre><code class="language-python">found = False
+</code></pre>
+<p>Variabel <code>found</code> digunakan sebagai penanda apakah data sudah ditemukan atau belum.</p>
+<pre><code class="language-python">while index &lt; len(myList) and not found:
+</code></pre>
+<p>Perulangan berjalan selama indeks masih berada di dalam panjang list dan data belum ditemukan.</p>
+<p>Jika data ditemukan, maka <code>found</code> berubah menjadi <code>True</code> dan perulangan berhenti.</p>
+</div><div class="cell markdown"><h1>B. Linear Search pada Data Terurut</h1>
+<h2>Pengertian Linear Search Data Terurut</h2>
+<p>Linear Search juga dapat digunakan pada data yang sudah terurut.
+Cara dasarnya tetap sama, yaitu mengecek data satu per satu dari awal ke akhir.</p>
+<p>Namun, pada data yang sudah terurut secara ascending, pencarian dapat dihentikan lebih cepat jika nilai yang sedang dicek sudah lebih besar daripada nilai yang dicari.</p>
+<p>Contoh:</p>
+<pre><code class="language-python">data = [1, 7, 11, 23, 39, 43, 56]
+cari = 25
+</code></pre>
+<p>Jika program sudah mengecek angka <code>39</code>, maka pencarian bisa dihentikan karena <code>39</code> lebih besar dari <code>25</code>.
+Karena data sudah terurut, nilai setelah <code>39</code> pasti lebih besar lagi.</p>
+</div><div class="cell markdown"><h2>First Index, Last Index, dan Len</h2>
+<p>Contoh list:</p>
+<pre><code class="language-python">data = [1, 7, 11, 23, 39, 43, 56]
+</code></pre>
+<p>Keterangan:</p>
+<ol>
+<li>First index = <code>0</code></li>
+<li>Last index = <code>6</code></li>
+<li>Len atau panjang data = <code>7</code></li>
+</ol>
+<p>Pada Python, indeks dimulai dari <code>0</code>, sehingga indeks terakhir adalah:</p>
+<pre><code class="language-python">len(data) - 1
+</code></pre>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Linear Search pada data terurut
+
+search = 25
+myList = [1, 7, 11, 23, 39, 43, 56]
+
+found = False
+index = 0
+looping = 0
+
+while index &lt; len(myList) and not found:
+    looping += 1
+    print(&quot;Looping ke-&quot;, looping)
+    print(&quot;Cek indeks:&quot;, index)
+    print(&quot;Nilai yang dicek:&quot;, myList[index])
+
+    if myList[index] == search:
+        found = True
+        print(&quot;Status: data ditemukan&quot;)
+    elif myList[index] &gt; search:
+        print(&quot;Status: pencarian dihentikan&quot;)
+        print(&quot;Alasan:&quot;, myList[index], &quot;lebih besar dari&quot;, search)
+        break
+    else:
+        print(&quot;Status: data belum ditemukan, lanjut ke indeks berikutnya&quot;)
+        index += 1
+
+    print()
+
+if found:
+    print(&quot;Hasil akhir: data&quot;, search, &quot;ditemukan pada indeks&quot;, index)
+    print(&quot;Jumlah looping:&quot;, looping)
+else:
+    print(&quot;Hasil akhir: data&quot;, search, &quot;tidak ditemukan&quot;)
+    print(&quot;Jumlah looping:&quot;, looping)</code></pre><div class="output"><pre>Looping ke- 1
+Cek indeks: 0
+Nilai yang dicek: 1
+Status: data belum ditemukan, lanjut ke indeks berikutnya
+
+Looping ke- 2
+Cek indeks: 1
+Nilai yang dicek: 7
+Status: data belum ditemukan, lanjut ke indeks berikutnya
+
+Looping ke- 3
+Cek indeks: 2
+Nilai yang dicek: 11
+Status: data belum ditemukan, lanjut ke indeks berikutnya
+
+Looping ke- 4
+Cek indeks: 3
+Nilai yang dicek: 23
+Status: data belum ditemukan, lanjut ke indeks berikutnya
+
+Looping ke- 5
+Cek indeks: 4
+Nilai yang dicek: 39
+Status: pencarian dihentikan
+Alasan: 39 lebih besar dari 25
+Hasil akhir: data 25 tidak ditemukan
+Jumlah looping: 5
+</pre></div></div><div class="cell markdown"><h2>Perbedaan Linear Search Tidak Terurut dan Terurut</h2>
+<p>Pada data tidak terurut, program harus terus mengecek sampai data ditemukan atau sampai data terakhir.</p>
+<p>Pada data terurut, program bisa berhenti lebih cepat jika nilai yang sedang dicek sudah melewati nilai yang dicari.</p>
+<p>Contoh:</p>
+<ul>
+<li>Target = <code>25</code></li>
+<li>Data yang dicek = <code>39</code></li>
+<li>Karena <code>39 &gt; 25</code>, maka pencarian bisa dihentikan.</li>
+</ul>
+</div><div class="cell markdown"><h1>C. Binary Search</h1>
+<h2>Pengertian Binary Search</h2>
+<p><strong>Binary Search</strong> adalah algoritma pencarian yang dilakukan dengan cara membagi area pencarian menjadi dua bagian.</p>
+<p>Binary Search bekerja dengan mengecek data pada bagian tengah terlebih dahulu.
+Jika nilai tengah sama dengan data yang dicari, maka data ditemukan.
+Jika nilai yang dicari lebih kecil dari nilai tengah, pencarian dilanjutkan ke bagian kiri.
+Jika nilai yang dicari lebih besar dari nilai tengah, pencarian dilanjutkan ke bagian kanan.</p>
+<p>Syarat utama Binary Search adalah data harus sudah terurut.</p>
+</div><div class="cell markdown"><h2>Cara Kerja Binary Search</h2>
+<p>Misalnya terdapat data:</p>
+<pre><code class="language-python">data = [1, 7, 11, 23, 39, 43, 56]
+cari = 39
+</code></pre>
+<p>Langkah Binary Search:</p>
+<ol>
+<li>Tentukan indeks awal dengan nama <code>first</code>.</li>
+<li>Tentukan indeks akhir dengan nama <code>last</code>.</li>
+<li>Cari indeks tengah dengan rumus:</li>
+</ol>
+<pre><code class="language-python">middle = (first + last) // 2
+</code></pre>
+<ol start="4">
+<li>Bandingkan data pada indeks tengah dengan nilai yang dicari.</li>
+<li>Jika sama, data ditemukan.</li>
+<li>Jika nilai yang dicari lebih kecil, geser batas akhir ke kiri.</li>
+<li>Jika nilai yang dicari lebih besar, geser batas awal ke kanan.</li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Binary Search
+
+search = 39
+myList = [1, 7, 11, 23, 39, 43, 56]
+
+first = 0
+last = len(myList) - 1
+found = False
+looping = 0
+
+while first &lt;= last and not found:
+    looping += 1
+    middle = (first + last) // 2
+
+    print(&quot;Looping ke-&quot;, looping)
+    print(&quot;First index:&quot;, first)
+    print(&quot;Last index:&quot;, last)
+    print(&quot;Middle index:&quot;, middle)
+    print(&quot;Nilai tengah:&quot;, myList[middle])
+
+    if myList[middle] == search:
+        found = True
+        print(&quot;Status: data ditemukan&quot;)
+    else:
+        if search &lt; myList[middle]:
+            print(&quot;Status: cari di bagian kiri&quot;)
+            last = middle - 1
+        else:
+            print(&quot;Status: cari di bagian kanan&quot;)
+            first = middle + 1
+
+    print()
+
+if found:
+    print(&quot;Hasil akhir: data&quot;, search, &quot;ditemukan pada indeks&quot;, middle)
+    print(&quot;Jumlah looping:&quot;, looping)
+else:
+    print(&quot;Hasil akhir: data&quot;, search, &quot;tidak ditemukan&quot;)
+    print(&quot;Jumlah looping:&quot;, looping)</code></pre><div class="output"><pre>Looping ke- 1
+First index: 0
+Last index: 6
+Middle index: 3
+Nilai tengah: 23
+Status: cari di bagian kanan
+
+Looping ke- 2
+First index: 4
+Last index: 6
+Middle index: 5
+Nilai tengah: 43
+Status: cari di bagian kiri
+
+Looping ke- 3
+First index: 4
+Last index: 4
+Middle index: 4
+Nilai tengah: 39
+Status: data ditemukan
+
+Hasil akhir: data 39 ditemukan pada indeks 4
+Jumlah looping: 3
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Kode Binary Search</h2>
+<pre><code class="language-python">first = 0
+</code></pre>
+<p><code>first</code> adalah batas awal pencarian.</p>
+<pre><code class="language-python">last = len(myList) - 1
+</code></pre>
+<p><code>last</code> adalah batas akhir pencarian.</p>
+<pre><code class="language-python">middle = (first + last) // 2
+</code></pre>
+<p><code>middle</code> digunakan untuk mencari indeks tengah.</p>
+<pre><code class="language-python">if search &lt; myList[middle]:
+    last = middle - 1
+</code></pre>
+<p>Jika nilai yang dicari lebih kecil dari nilai tengah, pencarian dilanjutkan ke bagian kiri.</p>
+<pre><code class="language-python">else:
+    first = middle + 1
+</code></pre>
+<p>Jika nilai yang dicari lebih besar dari nilai tengah, pencarian dilanjutkan ke bagian kanan.</p>
+</div><div class="cell markdown"><h2>Binary Search Versi Fungsi</h2>
+<p>Selain ditulis langsung, Binary Search juga dapat dibuat dalam bentuk fungsi.
+Dengan fungsi, kode dapat digunakan berulang kali untuk mencari data yang berbeda.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Binary Search versi fungsi
+
+def binarySearch(alist, item):
+    first = 0
+    last = len(alist) - 1
+    found = False
+
+    while first &lt;= last and not found:
+        midpoint = (first + last) // 2
+
+        if alist[midpoint] == item:
+            found = True
+        else:
+            if item &lt; alist[midpoint]:
+                last = midpoint - 1
+            else:
+                first = midpoint + 1
+
+    return found
+
+testlist = [0, 1, 2, 8, 13, 17, 19, 32, 42]
+
+print(binarySearch(testlist, 3))
+print(binarySearch(testlist, 13))</code></pre><div class="output"><pre>False
+True
+</pre></div></div><div class="cell markdown"><h1>D. Perbandingan Linear Search dan Binary Search</h1>
+<table>
+<thead>
+<tr>
+  <th>Aspek</th>
+  <th>Linear Search Tidak Terurut</th>
+  <th>Linear Search Terurut</th>
+  <th>Binary Search</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Cara kerja</td>
+  <td>Cek satu per satu</td>
+  <td>Cek satu per satu, bisa berhenti lebih cepat</td>
+  <td>Cek dari tengah lalu bagi dua area pencarian</td>
+</tr>
+<tr>
+  <td>Syarat data</td>
+  <td>Tidak harus terurut</td>
+  <td>Harus terurut agar bisa berhenti lebih cepat</td>
+  <td>Harus terurut</td>
+</tr>
+<tr>
+  <td>Cocok untuk</td>
+  <td>Data kecil atau acak</td>
+  <td>Data terurut dengan jumlah kecil sampai sedang</td>
+  <td>Data terurut dengan jumlah besar</td>
+</tr>
+<tr>
+  <td>Kompleksitas</td>
+  <td>O(n)</td>
+  <td>O(n), tetapi bisa lebih cepat pada kondisi tertentu</td>
+  <td>O(log n)</td>
+</tr>
+<tr>
+  <td>Kelebihan</td>
+  <td>Sederhana dan mudah dipahami</td>
+  <td>Lebih efisien daripada linear biasa pada data terurut</td>
+  <td>Sangat cepat pada data besar</td>
+</tr>
+<tr>
+  <td>Kekurangan</td>
+  <td>Lambat jika data besar</td>
+  <td>Tetap mengecek dari awal</td>
+  <td>Tidak bisa digunakan pada data acak</td>
+</tr>
+</tbody>
+</table>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Perbandingan jumlah looping sederhana
+
+data_tidak_terurut = [43, 11, 56, 1, 39, 7, 23]
+data_terurut = [1, 7, 11, 23, 39, 43, 56]
+search = 56
+
+# Linear Search tidak terurut
+loop_linear_tidak_terurut = 0
+for i in range(len(data_tidak_terurut)):
+    loop_linear_tidak_terurut += 1
+    if data_tidak_terurut[i] == search:
+        break
+
+# Linear Search terurut
+loop_linear_terurut = 0
+for i in range(len(data_terurut)):
+    loop_linear_terurut += 1
+    if data_terurut[i] == search:
+        break
+    elif data_terurut[i] &gt; search:
+        break
+
+# Binary Search
+first = 0
+last = len(data_terurut) - 1
+loop_binary = 0
+found = False
+
+while first &lt;= last and not found:
+    loop_binary += 1
+    middle = (first + last) // 2
+
+    if data_terurut[middle] == search:
+        found = True
+    elif search &lt; data_terurut[middle]:
+        last = middle - 1
+    else:
+        first = middle + 1
+
+print(&quot;Data yang dicari:&quot;, search)
+print(&quot;Looping Linear Search tidak terurut:&quot;, loop_linear_tidak_terurut)
+print(&quot;Looping Linear Search terurut:&quot;, loop_linear_terurut)
+print(&quot;Looping Binary Search:&quot;, loop_binary)</code></pre><div class="output"><pre>Data yang dicari: 56
+Looping Linear Search tidak terurut: 3
+Looping Linear Search terurut: 7
+Looping Binary Search: 3
+</pre></div></div><div class="cell markdown"><h1>E. Kesimpulan</h1>
+<p>Searching adalah proses mencari data tertentu di dalam kumpulan data.
+Pada materi ini, algoritma searching yang dibahas adalah Linear Search dan Binary Search.</p>
+<p><strong>Linear Search pada data tidak terurut</strong> dilakukan dengan mengecek data satu per satu dari awal sampai akhir.
+Algoritma ini mudah dipahami dan dapat digunakan pada data acak.</p>
+<p><strong>Linear Search pada data terurut</strong> tetap mengecek data satu per satu, tetapi dapat dihentikan lebih cepat jika nilai yang sedang dicek sudah lebih besar daripada nilai yang dicari.</p>
+<p><strong>Binary Search</strong> adalah algoritma pencarian yang lebih cepat karena membagi area pencarian menjadi dua bagian.
+Namun, Binary Search hanya bisa digunakan jika data sudah terurut.</p>
+<p>Jadi, jika data masih acak dan jumlahnya sedikit, Linear Search dapat digunakan.
+Jika data sudah terurut dan jumlahnya besar, Binary Search lebih efisien.</p>
+</div><div class="cell markdown"><h1>Latihan</h1>
+<ol>
+<li>Ubah nilai <code>search</code> pada kode Linear Search tidak terurut, lalu jalankan ulang program.</li>
+<li>Ubah nilai <code>search</code> pada kode Linear Search terurut menjadi nilai yang tidak ada di dalam list.</li>
+<li>Jalankan Binary Search dengan nilai <code>search = 7</code>.</li>
+<li>Bandingkan jumlah looping dari Linear Search dan Binary Search.</li>
+<li>Jelaskan mengapa Binary Search membutuhkan data yang sudah terurut.</li>
+</ol>
+</div>
+</section>
+<div class="footer">C.2026 - Moch. Habdulbar</div>
+</main>
+</body>
+</html>

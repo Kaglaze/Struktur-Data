@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8.1 Tree</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#222;font-family:Arial,Helvetica,sans-serif;line-height:1.65;font-size:16px}
+a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}
+.topbar{background:#1f2937;color:#fff;padding:14px 22px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.topbar .brand{font-weight:700;margin-right:18px}.topbar a{color:#e5e7eb;margin-right:12px;font-size:14px}.topbar a:hover{color:#fff}
+.container{max-width:980px;margin:28px auto;padding:0 18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:28px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+h1,h2,h3,h4{line-height:1.25;color:#111827;margin-top:1.2em;margin-bottom:.55em}h1{font-size:30px;border-bottom:2px solid #e5e7eb;padding-bottom:12px;margin-top:0}h2{font-size:24px;border-bottom:1px solid #eceff3;padding-bottom:8px}h3{font-size:20px}
+p{margin:0 0 14px}ul,ol{padding-left:24px;margin-top:8px;margin-bottom:16px}li{margin:4px 0}
+pre{background:#111827;color:#f9fafb;border-radius:10px;padding:16px;overflow:auto;line-height:1.5;margin:16px 0;font-size:14px;border:1px solid #0f172a}code{font-family:Consolas,'Courier New',monospace;font-size:.95em}
+:not(pre)>code{background:#eef2f7;color:#111827;padding:2px 5px;border-radius:5px}
+.cell{margin:18px 0}.code-title{font-size:13px;font-weight:700;color:#4b5563;margin-bottom:6px}.output{background:#f9fafb;border-left:4px solid #94a3b8;padding:12px 14px;border-radius:8px;margin:10px 0;overflow:auto}.output pre{background:transparent;color:#111827;border:0;padding:0;margin:0;white-space:pre-wrap}
+.err{border-left-color:#ef4444;background:#fff1f2;color:#7f1d1d}blockquote{border-left:4px solid #d1d5db;margin:16px 0;padding:10px 16px;background:#f9fafb;color:#374151}
+table{border-collapse:collapse;width:100%;margin:16px 0;display:block;overflow-x:auto}th,td{border:1px solid #d1d5db;padding:8px 10px;text-align:left}th{background:#f3f4f6}
+img{max-width:100%;height:auto;border-radius:8px;margin:10px 0}.footer{text-align:center;color:#6b7280;font-size:13px;padding:24px 0}.page-title{font-size:14px;color:#6b7280;margin-bottom:10px}
+@media(max-width:700px){.container{margin:14px auto;padding:0 12px}.card{padding:18px;border-radius:10px}.topbar{padding:12px 14px}.topbar a{display:inline-block;margin-top:6px}h1{font-size:25px}h2{font-size:21px}pre{font-size:13px;padding:12px}}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="index.html">Home/index</a></div>
+<main class="container">
+<section class="card">
+<div class="cell markdown"><h1>8.1 Tree</h1>
+<p>Tree adalah struktur data non-linear yang menyimpan data dalam bentuk hubungan bertingkat.<br />
+Tree terdiri dari <strong>node</strong> yang saling terhubung menggunakan <strong>edge</strong>.</p>
+<p>Pada catatan ini, materi yang dibahas adalah:</p>
+<ol>
+<li>Pengertian Tree</li>
+<li>Istilah dasar pada Tree</li>
+<li>Binary Tree</li>
+<li>Implementasi Binary Tree</li>
+<li>Tree Traversal</li>
+<li>Parse Tree</li>
+<li>Binary Search Tree</li>
+<li>Insert, Search, dan Delete pada BST</li>
+</ol>
+<p>Catatan ini dibuat dengan bahasa sederhana agar mudah dipahami dan bisa langsung dijalankan di Jupyter Notebook.</p>
+</div><div class="cell markdown"><h2>Pengertian Tree</h2>
+<p><strong>Tree</strong> adalah struktur data yang bentuknya menyerupai pohon, tetapi posisi akarnya berada di bagian atas dan daun berada di bagian bawah.</p>
+<p>Dalam struktur data tree:</p>
+<ul>
+<li>Data disimpan dalam bentuk <strong>node</strong>.</li>
+<li>Hubungan antar node disebut <strong>edge</strong>.</li>
+<li>Node paling atas disebut <strong>root</strong>.</li>
+<li>Node yang tidak memiliki anak disebut <strong>leaf</strong>.</li>
+</ul>
+<p>Tree berbeda dengan list, stack, dan queue karena data pada tree tidak berjalan satu arah saja. Tree memiliki cabang sehingga cocok digunakan untuk menggambarkan hubungan hierarki.</p>
+<p>Contoh penggunaan tree:</p>
+<ol>
+<li>Struktur folder pada komputer</li>
+<li>Struktur organisasi</li>
+<li>Silsilah keluarga</li>
+<li>Parse tree pada ekspresi matematika</li>
+<li>Binary Search Tree untuk pencarian data</li>
+</ol>
+</div><div class="cell markdown"><h2>Istilah Dasar pada Tree</h2>
+<p>Beberapa istilah penting pada tree adalah sebagai berikut.</p>
+<ol>
+<li><p><strong>Node</strong><br />
+Node adalah bagian utama dari tree yang menyimpan data.</p>
+</li>
+<li><p><strong>Edge</strong><br />
+Edge adalah garis penghubung antara satu node dengan node lainnya.</p>
+</li>
+<li><p><strong>Root</strong><br />
+Root adalah node paling atas dan tidak memiliki parent.</p>
+</li>
+<li><p><strong>Parent</strong><br />
+Parent adalah node yang memiliki hubungan ke node di bawahnya.</p>
+</li>
+<li><p><strong>Child</strong><br />
+Child adalah node anak yang berada di bawah parent.</p>
+</li>
+<li><p><strong>Sibling</strong><br />
+Sibling adalah node-node yang memiliki parent yang sama.</p>
+</li>
+<li><p><strong>Path</strong><br />
+Path adalah urutan node yang dilewati dari satu node ke node lainnya.</p>
+</li>
+<li><p><strong>Subtree</strong><br />
+Subtree adalah bagian kecil dari tree yang terdiri dari sebuah node dan seluruh turunannya.</p>
+</li>
+<li><p><strong>Leaf Node</strong><br />
+Leaf node adalah node yang tidak memiliki child.</p>
+</li>
+<li><p><strong>Level</strong><br />
+Level adalah jumlah edge dari root menuju node tertentu. Root berada pada level 0.</p>
+</li>
+<li><p><strong>Height</strong><br />
+Height adalah tinggi tree, yaitu level paling jauh dari root menuju leaf.</p>
+</li>
+</ol>
+</div><div class="cell markdown"><h2>Contoh Bentuk Tree</h2>
+<p>Misalnya terdapat tree seperti berikut.</p>
+<pre><code class="language-text">        A
+      /   \
+     B     C
+          / \
+         D   E
+</code></pre>
+<p>Keterangan:</p>
+<ul>
+<li><code>A</code> adalah root.</li>
+<li><code>B</code> dan <code>C</code> adalah child dari <code>A</code>.</li>
+<li><code>D</code> dan <code>E</code> adalah child dari <code>C</code>.</li>
+<li><code>B</code>, <code>D</code>, dan <code>E</code> adalah leaf node.</li>
+<li>Path dari <code>A</code> ke <code>E</code> adalah <code>A -&gt; C -&gt; E</code>.</li>
+<li>Height tree tersebut adalah <code>2</code>, karena jalur terpanjang memiliki 2 edge.</li>
+</ul>
+</div><div class="cell markdown"><h1>A. Binary Tree</h1>
+<h2>Pengertian Binary Tree</h2>
+<p><strong>Binary Tree</strong> adalah tree yang setiap node-nya hanya boleh memiliki maksimal dua child.</p>
+<p>Dua child tersebut biasanya disebut:</p>
+<ol>
+<li><strong>Left Child</strong></li>
+<li><strong>Right Child</strong></li>
+</ol>
+<p>Contoh binary tree:</p>
+<pre><code class="language-text">        A
+      /   \
+     B     C
+          / \
+         D   E
+</code></pre>
+<p>Pada contoh tersebut:</p>
+<ul>
+<li><code>A</code> memiliki left child <code>B</code> dan right child <code>C</code>.</li>
+<li><code>C</code> memiliki left child <code>D</code> dan right child <code>E</code>.</li>
+<li><code>B</code>, <code>D</code>, dan <code>E</code> tidak memiliki child.</li>
+</ul>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Implementasi Binary Tree sederhana
+
+class BinaryTree:
+    def __init__(self, rootObj):
+        self.key = rootObj
+        self.leftChild = None
+        self.rightChild = None
+
+    def insertLeft(self, newNode):
+        if self.leftChild == None:
+            self.leftChild = BinaryTree(newNode)
+        else:
+            temp = BinaryTree(newNode)
+            temp.leftChild = self.leftChild
+            self.leftChild = temp
+
+    def insertRight(self, newNode):
+        if self.rightChild == None:
+            self.rightChild = BinaryTree(newNode)
+        else:
+            temp = BinaryTree(newNode)
+            temp.rightChild = self.rightChild
+            self.rightChild = temp
+
+    def getLeftChild(self):
+        return self.leftChild
+
+    def getRightChild(self):
+        return self.rightChild
+
+    def setRootVal(self, obj):
+        self.key = obj
+
+    def getRootVal(self):
+        return self.key
+
+    def height(self):
+        if self.leftChild == None and self.rightChild == None:
+            return 0
+
+        left_height = 0
+        right_height = 0
+
+        if self.leftChild != None:
+            left_height = self.leftChild.height() + 1
+
+        if self.rightChild != None:
+            right_height = self.rightChild.height() + 1
+
+        if left_height &gt; right_height:
+            return left_height
+        else:
+            return right_height
+
+    def show(self, level=0):
+        print(&quot;  &quot; * level + str(self.key))
+        if self.leftChild != None:
+            self.leftChild.show(level + 1)
+        if self.rightChild != None:
+            self.rightChild.show(level + 1)
+
+
+# Membuat tree
+r = BinaryTree(&#x27;A&#x27;)
+r.insertLeft(&#x27;B&#x27;)
+r.insertRight(&#x27;C&#x27;)
+r.getRightChild().insertLeft(&#x27;D&#x27;)
+r.getRightChild().insertRight(&#x27;E&#x27;)
+
+print(&quot;Isi tree:&quot;)
+r.show()
+print()
+print(&quot;Root:&quot;, r.getRootVal())
+print(&quot;Left child dari root:&quot;, r.getLeftChild().getRootVal())
+print(&quot;Right child dari root:&quot;, r.getRightChild().getRootVal())
+print(&quot;Height tree:&quot;, r.height())</code></pre><div class="output"><pre>Isi tree:
+A
+  B
+  C
+    D
+    E
+
+Root: A
+Left child dari root: B
+Right child dari root: C
+Height tree: 2
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Kode Binary Tree</h2>
+<pre><code class="language-python">class BinaryTree:
+</code></pre>
+<p>Bagian ini digunakan untuk membuat class <code>BinaryTree</code>. Class ini menjadi cetakan untuk membuat node tree.</p>
+<pre><code class="language-python">self.key = rootObj
+</code></pre>
+<p><code>self.key</code> digunakan untuk menyimpan nilai dari node.</p>
+<pre><code class="language-python">self.leftChild = None
+self.rightChild = None
+</code></pre>
+<p>Dua baris tersebut digunakan untuk menyiapkan cabang kiri dan cabang kanan. Awalnya bernilai <code>None</code> karena node baru belum memiliki child.</p>
+<pre><code class="language-python">def insertLeft(self, newNode):
+</code></pre>
+<p>Method ini digunakan untuk menambahkan node baru di sebelah kiri.</p>
+<pre><code class="language-python">def insertRight(self, newNode):
+</code></pre>
+<p>Method ini digunakan untuk menambahkan node baru di sebelah kanan.</p>
+<pre><code class="language-python">def height(self):
+</code></pre>
+<p>Method ini digunakan untuk menghitung tinggi tree. Tinggi dihitung dari jumlah edge terpanjang dari root menuju leaf.</p>
+</div><div class="cell markdown"><h1>B. Tree Traversal</h1>
+<h2>Pengertian Tree Traversal</h2>
+<p><strong>Tree Traversal</strong> adalah proses mengunjungi semua node pada tree dengan urutan tertentu.</p>
+<p>Traversal yang umum digunakan pada binary tree adalah:</p>
+<ol>
+<li><p><strong>Preorder</strong><br />
+Urutannya: Root -&gt; Left -&gt; Right</p>
+</li>
+<li><p><strong>Inorder</strong><br />
+Urutannya: Left -&gt; Root -&gt; Right</p>
+</li>
+<li><p><strong>Postorder</strong><br />
+Urutannya: Left -&gt; Right -&gt; Root</p>
+</li>
+</ol>
+<p>Misalnya terdapat tree:</p>
+<pre><code class="language-text">        A
+      /   \
+     B     C
+          / \
+         D   E
+</code></pre>
+<p>Maka hasil traversalnya:</p>
+<ul>
+<li>Preorder: <code>A B C D E</code></li>
+<li>Inorder: <code>B A D C E</code></li>
+<li>Postorder: <code>B D E C A</code></li>
+</ul>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Tree Traversal pada Binary Tree
+
+def preorder(tree):
+    if tree != None:
+        print(tree.getRootVal(), end=&#x27; &#x27;)
+        preorder(tree.getLeftChild())
+        preorder(tree.getRightChild())
+
+
+def inorder(tree):
+    if tree != None:
+        inorder(tree.getLeftChild())
+        print(tree.getRootVal(), end=&#x27; &#x27;)
+        inorder(tree.getRightChild())
+
+
+def postorder(tree):
+    if tree != None:
+        postorder(tree.getLeftChild())
+        postorder(tree.getRightChild())
+        print(tree.getRootVal(), end=&#x27; &#x27;)
+
+
+# Membuat tree yang sama
+r = BinaryTree(&#x27;A&#x27;)
+r.insertLeft(&#x27;B&#x27;)
+r.insertRight(&#x27;C&#x27;)
+r.getRightChild().insertLeft(&#x27;D&#x27;)
+r.getRightChild().insertRight(&#x27;E&#x27;)
+
+print(&quot;Preorder  :&quot;, end=&#x27; &#x27;)
+preorder(r)
+print()
+
+print(&quot;Inorder   :&quot;, end=&#x27; &#x27;)
+inorder(r)
+print()
+
+print(&quot;Postorder :&quot;, end=&#x27; &#x27;)
+postorder(r)
+print()</code></pre><div class="output"><pre>Preorder  : A B C D E 
+Inorder   : B A D C E 
+Postorder : B D E C A 
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Tree Traversal</h2>
+<p>Pada <strong>preorder</strong>, root dikunjungi terlebih dahulu. Setelah itu program masuk ke subtree kiri, lalu subtree kanan.</p>
+<p>Pada <strong>inorder</strong>, subtree kiri dikunjungi terlebih dahulu. Setelah itu root, lalu subtree kanan.</p>
+<p>Pada <strong>postorder</strong>, subtree kiri dan subtree kanan dikunjungi terlebih dahulu. Root dikunjungi paling akhir.</p>
+<p>Traversal sering digunakan untuk:</p>
+<ol>
+<li>Menampilkan semua data di dalam tree</li>
+<li>Mengevaluasi ekspresi matematika</li>
+<li>Menyalin struktur tree</li>
+<li>Menghapus tree dari node paling bawah</li>
+</ol>
+</div><div class="cell markdown"><h1>C. Parse Tree</h1>
+<h2>Pengertian Parse Tree</h2>
+<p><strong>Parse Tree</strong> adalah tree yang digunakan untuk menggambarkan struktur dari sebuah ekspresi.</p>
+<p>Contoh ekspresi:</p>
+<pre><code class="language-text">( ( 10 * 5 ) * ( ( 5 + 6 ) / 9 ) )
+</code></pre>
+<p>Ekspresi tersebut dapat dibentuk menjadi tree. Operator seperti <code>+</code>, <code>-</code>, <code>*</code>, dan <code>/</code> menjadi node internal, sedangkan angka menjadi leaf node.</p>
+<p>Parse tree berguna untuk memahami urutan perhitungan pada ekspresi matematika.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Parse Tree sederhana
+
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        return self.items.pop()
+
+    def isEmpty(self):
+        return self.items == []
+
+
+def buildParseTree(fpexp):
+    fplist = fpexp.split()
+    pStack = Stack()
+    eTree = BinaryTree(&#x27;&#x27;)
+    pStack.push(eTree)
+    currentTree = eTree
+
+    for i in fplist:
+        if i == &#x27;(&#x27;:
+            currentTree.insertLeft(&#x27;&#x27;)
+            pStack.push(currentTree)
+            currentTree = currentTree.getLeftChild()
+
+        elif i not in [&#x27;+&#x27;, &#x27;-&#x27;, &#x27;*&#x27;, &#x27;/&#x27;, &#x27;)&#x27;]:
+            currentTree.setRootVal(int(i))
+            parent = pStack.pop()
+            currentTree = parent
+
+        elif i in [&#x27;+&#x27;, &#x27;-&#x27;, &#x27;*&#x27;, &#x27;/&#x27;]:
+            currentTree.setRootVal(i)
+            currentTree.insertRight(&#x27;&#x27;)
+            pStack.push(currentTree)
+            currentTree = currentTree.getRightChild()
+
+        elif i == &#x27;)&#x27;:
+            currentTree = pStack.pop()
+
+    return eTree
+
+
+def hitung(angka1, operator, angka2):
+    if operator == &#x27;+&#x27;:
+        return angka1 + angka2
+    elif operator == &#x27;-&#x27;:
+        return angka1 - angka2
+    elif operator == &#x27;*&#x27;:
+        return angka1 * angka2
+    elif operator == &#x27;/&#x27;:
+        return angka1 / angka2
+
+
+def postordereval(tree):
+    if tree != None:
+        kiri = postordereval(tree.getLeftChild())
+        kanan = postordereval(tree.getRightChild())
+
+        if kiri != None and kanan != None:
+            return hitung(kiri, tree.getRootVal(), kanan)
+        else:
+            return tree.getRootVal()
+
+
+pt = buildParseTree(&quot;( ( 10 * 5 ) * ( ( 5 + 6 ) / 9 ) )&quot;)
+
+print(&quot;Preorder  :&quot;, end=&#x27; &#x27;)
+preorder(pt)
+print()
+
+print(&quot;Inorder   :&quot;, end=&#x27; &#x27;)
+inorder(pt)
+print()
+
+print(&quot;Postorder :&quot;, end=&#x27; &#x27;)
+postorder(pt)
+print()
+
+print(&quot;Hasil evaluasi:&quot;, postordereval(pt))</code></pre><div class="output"><pre>Preorder  : * * 10 5 / + 5 6 9 
+Inorder   : 10 * 5 * 5 + 6 / 9 
+Postorder : 10 5 * 5 6 + 9 / * 
+Hasil evaluasi: 61.111111111111114
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Kode Parse Tree</h2>
+<pre><code class="language-python">fplist = fpexp.split()
+</code></pre>
+<p>Ekspresi dipecah menjadi beberapa token berdasarkan spasi.</p>
+<pre><code class="language-python">pStack = Stack()
+</code></pre>
+<p>Stack digunakan untuk menyimpan parent sementara ketika program sedang membangun tree.</p>
+<pre><code class="language-python">if i == '(':
+</code></pre>
+<p>Jika bertemu kurung buka, program membuat cabang kiri baru karena ekspresi baru akan dimulai.</p>
+<pre><code class="language-python">elif i in ['+', '-', '*', '/']:
+</code></pre>
+<p>Jika bertemu operator, operator tersebut disimpan sebagai root dari subtree saat ini.</p>
+<pre><code class="language-python">def postordereval(tree):
+</code></pre>
+<p>Fungsi ini menghitung hasil ekspresi menggunakan konsep postorder, yaitu menghitung bagian kiri dan kanan terlebih dahulu, lalu operatornya.</p>
+</div><div class="cell markdown"><h1>D. Binary Search Tree</h1>
+<h2>Pengertian Binary Search Tree</h2>
+<p><strong>Binary Search Tree</strong> atau <strong>BST</strong> adalah binary tree yang memiliki aturan khusus.</p>
+<p>Aturannya adalah:</p>
+<ol>
+<li>Nilai yang lebih kecil dari root disimpan di sebelah kiri.</li>
+<li>Nilai yang lebih besar dari root disimpan di sebelah kanan.</li>
+<li>Aturan tersebut berlaku juga untuk setiap subtree.</li>
+</ol>
+<p>Contoh BST:</p>
+<pre><code class="language-text">        5
+      /   \
+     2     30
+      \   /  \
+       4 25   40
+</code></pre>
+<p>BST memudahkan proses pencarian karena setiap perbandingan dapat mengurangi area pencarian.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Implementasi Binary Search Tree
+
+class BSTNode:
+    def __init__(self, key):
+        self.key = key
+        self.left = None
+        self.right = None
+
+
+def insert(root, key):
+    if root == None:
+        print(&quot;Masukkan&quot;, key, &quot;sebagai node baru&quot;)
+        return BSTNode(key)
+
+    if key &lt; root.key:
+        print(key, &quot;lebih kecil dari&quot;, root.key, &quot;-&gt; masuk ke kiri&quot;)
+        root.left = insert(root.left, key)
+    elif key &gt; root.key:
+        print(key, &quot;lebih besar dari&quot;, root.key, &quot;-&gt; masuk ke kanan&quot;)
+        root.right = insert(root.right, key)
+    else:
+        print(key, &quot;sudah ada di dalam BST&quot;)
+
+    return root
+
+
+def search(root, key):
+    if root == None:
+        return False
+
+    print(&quot;Cek node:&quot;, root.key)
+
+    if key == root.key:
+        return True
+    elif key &lt; root.key:
+        return search(root.left, key)
+    else:
+        return search(root.right, key)
+
+
+def inorderBST(root):
+    if root != None:
+        inorderBST(root.left)
+        print(root.key, end=&#x27; &#x27;)
+        inorderBST(root.right)
+
+
+# Data awal sesuai contoh
+angka = [5, 30, 2, 40, 25, 4]
+root = None
+
+for data in angka:
+    print(&quot;Insert&quot;, data)
+    root = insert(root, data)
+    print()
+
+print(&quot;Hasil inorder BST:&quot;)
+inorderBST(root)
+print()
+
+print(&quot;\nMencari data 25&quot;)
+if search(root, 25):
+    print(&quot;Data ditemukan&quot;)
+else:
+    print(&quot;Data tidak ditemukan&quot;)</code></pre><div class="output"><pre>Insert 5
+Masukkan 5 sebagai node baru
+
+Insert 30
+30 lebih besar dari 5 -&gt; masuk ke kanan
+Masukkan 30 sebagai node baru
+
+Insert 2
+2 lebih kecil dari 5 -&gt; masuk ke kiri
+Masukkan 2 sebagai node baru
+
+Insert 40
+40 lebih besar dari 5 -&gt; masuk ke kanan
+40 lebih besar dari 30 -&gt; masuk ke kanan
+Masukkan 40 sebagai node baru
+
+Insert 25
+25 lebih besar dari 5 -&gt; masuk ke kanan
+25 lebih kecil dari 30 -&gt; masuk ke kiri
+Masukkan 25 sebagai node baru
+
+Insert 4
+4 lebih kecil dari 5 -&gt; masuk ke kiri
+4 lebih besar dari 2 -&gt; masuk ke kanan
+Masukkan 4 sebagai node baru
+
+Hasil inorder BST:
+2 4 5 25 30 40 
+
+Mencari data 25
+Cek node: 5
+Cek node: 30
+Cek node: 25
+Data ditemukan
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Insert dan Search pada BST</h2>
+<p>Pada proses <strong>insert</strong>, program membandingkan data baru dengan node yang sedang diperiksa.</p>
+<ul>
+<li>Jika data baru lebih kecil, maka data diarahkan ke subtree kiri.</li>
+<li>Jika data baru lebih besar, maka data diarahkan ke subtree kanan.</li>
+<li>Jika data sama, maka data tidak ditambahkan lagi agar tidak terjadi duplikasi.</li>
+</ul>
+<p>Pada proses <strong>search</strong>, cara kerjanya hampir sama dengan insert.</p>
+<p>Contoh jika mencari <code>25</code>:</p>
+<ol>
+<li>Mulai dari root <code>5</code>.</li>
+<li>Karena <code>25 &gt; 5</code>, pindah ke kanan.</li>
+<li>Cek node <code>30</code>.</li>
+<li>Karena <code>25 &lt; 30</code>, pindah ke kiri.</li>
+<li>Data <code>25</code> ditemukan.</li>
+</ol>
+<p>Hasil <strong>inorder traversal</strong> pada BST akan menampilkan data secara terurut dari kecil ke besar.</p>
+</div><div class="cell markdown"><h1>E. Insert 19 pada BST</h1>
+<p>Pada PPT terdapat contoh data:</p>
+<pre><code class="language-python">5, 30, 2, 40, 25, 4
+</code></pre>
+<p>Jika data <code>19</code> dimasukkan ke dalam BST, maka alurnya:</p>
+<ol>
+<li>Bandingkan <code>19</code> dengan <code>5</code>.</li>
+<li>Karena <code>19 &gt; 5</code>, masuk ke kanan.</li>
+<li>Bandingkan <code>19</code> dengan <code>30</code>.</li>
+<li>Karena <code>19 &lt; 30</code>, masuk ke kiri.</li>
+<li>Bandingkan <code>19</code> dengan <code>25</code>.</li>
+<li>Karena <code>19 &lt; 25</code>, masuk ke kiri.</li>
+<li>Node <code>19</code> ditempatkan sebagai left child dari <code>25</code>.</li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Insert 19 ke dalam BST
+
+print(&quot;Insert 19&quot;)
+root = insert(root, 19)
+
+print(&quot;\nHasil inorder setelah insert 19:&quot;)
+inorderBST(root)
+print()</code></pre><div class="output"><pre>Insert 19
+19 lebih besar dari 5 -&gt; masuk ke kanan
+19 lebih kecil dari 30 -&gt; masuk ke kiri
+19 lebih kecil dari 25 -&gt; masuk ke kiri
+Masukkan 19 sebagai node baru
+
+Hasil inorder setelah insert 19:
+2 4 5 19 25 30 40 
+</pre></div></div><div class="cell markdown"><h1>F. Delete Node pada BST</h1>
+<h2>Pengertian Delete pada BST</h2>
+<p>Delete node pada BST memiliki beberapa kemungkinan kondisi.</p>
+<ol>
+<li><p><strong>Node tidak memiliki child</strong><br />
+Node langsung dihapus.</p>
+</li>
+<li><p><strong>Node memiliki satu child</strong><br />
+Node digantikan oleh child yang dimilikinya.</p>
+</li>
+<li><p><strong>Node memiliki dua child</strong><br />
+Node digantikan oleh nilai terkecil dari subtree kanan atau nilai terbesar dari subtree kiri.</p>
+</li>
+</ol>
+<p>Pada contoh ini, pengganti yang digunakan adalah nilai terkecil dari subtree kanan.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Delete node pada BST
+
+def minValueNode(node):
+    current = node
+    while current.left != None:
+        current = current.left
+    return current
+
+
+def deleteNode(root, key):
+    if root == None:
+        return root
+
+    if key &lt; root.key:
+        print(key, &quot;lebih kecil dari&quot;, root.key, &quot;-&gt; cari ke kiri&quot;)
+        root.left = deleteNode(root.left, key)
+
+    elif key &gt; root.key:
+        print(key, &quot;lebih besar dari&quot;, root.key, &quot;-&gt; cari ke kanan&quot;)
+        root.right = deleteNode(root.right, key)
+
+    else:
+        print(&quot;Node&quot;, key, &quot;ditemukan dan akan dihapus&quot;)
+
+        if root.left == None:
+            return root.right
+        elif root.right == None:
+            return root.left
+
+        pengganti = minValueNode(root.right)
+        print(&quot;Pengganti node&quot;, key, &quot;adalah&quot;, pengganti.key)
+        root.key = pengganti.key
+        root.right = deleteNode(root.right, pengganti.key)
+
+    return root
+
+
+print(&quot;Data sebelum delete:&quot;)
+inorderBST(root)
+print()
+
+print(&quot;\nDelete node 2&quot;)
+root = deleteNode(root, 2)
+
+print(&quot;\nData setelah delete:&quot;)
+inorderBST(root)
+print()</code></pre><div class="output"><pre>Data sebelum delete:
+2 4 5 19 25 30 40 
+
+Delete node 2
+2 lebih kecil dari 5 -&gt; cari ke kiri
+Node 2 ditemukan dan akan dihapus
+
+Data setelah delete:
+4 5 19 25 30 40 
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Delete Node</h2>
+<p>Pada contoh kode, node <code>2</code> dihapus dari BST.</p>
+<p>Sebelum menghapus, program mencari posisi node tersebut dengan aturan BST:</p>
+<ul>
+<li>Jika nilai yang dicari lebih kecil dari node saat ini, program bergerak ke kiri.</li>
+<li>Jika nilai yang dicari lebih besar dari node saat ini, program bergerak ke kanan.</li>
+<li>Jika nilai sama, node ditemukan.</li>
+</ul>
+<p>Setelah node ditemukan, program mengecek kondisi child dari node tersebut. Jika node hanya memiliki satu child, maka child tersebut dapat langsung menggantikan node yang dihapus.</p>
+</div><div class="cell markdown"><h1>G. Perbandingan Tree, Binary Tree, dan BST</h1>
+<table>
+<thead>
+<tr>
+  <th>Jenis</th>
+  <th>Penjelasan</th>
+  <th>Aturan Utama</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Tree</td>
+  <td>Struktur data hierarki yang terdiri dari node dan edge</td>
+  <td>Memiliki root dan hubungan parent-child</td>
+</tr>
+<tr>
+  <td>Binary Tree</td>
+  <td>Tree yang setiap node maksimal memiliki dua child</td>
+  <td>Child dibagi menjadi kiri dan kanan</td>
+</tr>
+<tr>
+  <td>Binary Search Tree</td>
+  <td>Binary tree yang datanya disusun agar mudah dicari</td>
+  <td>Kiri lebih kecil, kanan lebih besar</td>
+</tr>
+</tbody>
+</table>
+<p>Kesimpulannya, BST adalah bentuk khusus dari binary tree, sedangkan binary tree adalah bentuk khusus dari tree.</p>
+</div><div class="cell markdown"><h1>H. Kesimpulan</h1>
+<p>Tree adalah struktur data non-linear yang digunakan untuk menggambarkan hubungan hierarki. Tree terdiri dari node, edge, root, parent, child, leaf, level, dan height.</p>
+<p>Binary Tree adalah tree yang setiap node-nya memiliki maksimal dua child. Pada Binary Tree, traversal dapat dilakukan dengan preorder, inorder, dan postorder.</p>
+<p>Parse Tree digunakan untuk menggambarkan struktur ekspresi matematika. Dengan parse tree, program dapat mengevaluasi ekspresi menggunakan traversal.</p>
+<p>Binary Search Tree adalah binary tree yang memiliki aturan nilai kecil berada di kiri dan nilai besar berada di kanan. Aturan ini membuat proses insert, search, dan delete menjadi lebih terstruktur.</p>
+</div><div class="cell markdown"><h1>Latihan</h1>
+<ol>
+<li>Jelaskan perbedaan antara root, parent, child, dan leaf node.</li>
+<li>Buatlah contoh binary tree sederhana dengan root <code>10</code> dan child <code>5</code> serta <code>15</code>.</li>
+<li>Jelaskan urutan traversal preorder, inorder, dan postorder.</li>
+<li>Jika data BST adalah <code>5, 30, 2, 40, 25, 4</code>, jelaskan posisi data <code>19</code> jika dimasukkan ke dalam BST.</li>
+<li>Mengapa inorder traversal pada BST menghasilkan data yang terurut?</li>
+</ol>
+<h2>Jawaban Singkat</h2>
+<ol>
+<li>Root adalah node paling atas, parent adalah node yang memiliki child, child adalah node turunan, dan leaf adalah node yang tidak memiliki child.</li>
+<li>Root <code>10</code>, left child <code>5</code>, dan right child <code>15</code>.</li>
+<li>Preorder: Root -&gt; Left -&gt; Right, Inorder: Left -&gt; Root -&gt; Right, Postorder: Left -&gt; Right -&gt; Root.</li>
+<li>Data <code>19</code> berada di kiri node <code>25</code>, karena <code>19 &gt; 5</code>, <code>19 &lt; 30</code>, dan <code>19 &lt; 25</code>.</li>
+<li>Karena BST menyimpan data kecil di kiri dan data besar di kanan, sehingga inorder membaca data dari kiri, root, lalu kanan.</li>
+</ol>
+</div>
+</section>
+<div class="footer">C.2026 - Moch. Habdulbar</div>
+</main>
+</body>
+</html>

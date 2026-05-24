@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>quiz_sorting</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#222;font-family:Arial,Helvetica,sans-serif;line-height:1.65;font-size:16px}
+a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}
+.topbar{background:#1f2937;color:#fff;padding:14px 22px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.topbar .brand{font-weight:700;margin-right:18px}.topbar a{color:#e5e7eb;margin-right:12px;font-size:14px}.topbar a:hover{color:#fff}
+.container{max-width:980px;margin:28px auto;padding:0 18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:28px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+h1,h2,h3,h4{line-height:1.25;color:#111827;margin-top:1.2em;margin-bottom:.55em}h1{font-size:30px;border-bottom:2px solid #e5e7eb;padding-bottom:12px;margin-top:0}h2{font-size:24px;border-bottom:1px solid #eceff3;padding-bottom:8px}h3{font-size:20px}
+p{margin:0 0 14px}ul,ol{padding-left:24px;margin-top:8px;margin-bottom:16px}li{margin:4px 0}
+pre{background:#111827;color:#f9fafb;border-radius:10px;padding:16px;overflow:auto;line-height:1.5;margin:16px 0;font-size:14px;border:1px solid #0f172a}code{font-family:Consolas,'Courier New',monospace;font-size:.95em}
+:not(pre)>code{background:#eef2f7;color:#111827;padding:2px 5px;border-radius:5px}
+.cell{margin:18px 0}.code-title{font-size:13px;font-weight:700;color:#4b5563;margin-bottom:6px}.output{background:#f9fafb;border-left:4px solid #94a3b8;padding:12px 14px;border-radius:8px;margin:10px 0;overflow:auto}.output pre{background:transparent;color:#111827;border:0;padding:0;margin:0;white-space:pre-wrap}
+.err{border-left-color:#ef4444;background:#fff1f2;color:#7f1d1d}blockquote{border-left:4px solid #d1d5db;margin:16px 0;padding:10px 16px;background:#f9fafb;color:#374151}
+table{border-collapse:collapse;width:100%;margin:16px 0;display:block;overflow-x:auto}th,td{border:1px solid #d1d5db;padding:8px 10px;text-align:left}th{background:#f3f4f6}
+img{max-width:100%;height:auto;border-radius:8px;margin:10px 0}.footer{text-align:center;color:#6b7280;font-size:13px;padding:24px 0}.page-title{font-size:14px;color:#6b7280;margin-bottom:10px}
+@media(max-width:700px){.container{margin:14px auto;padding:0 12px}.card{padding:18px;border-radius:10px}.topbar{padding:12px 14px}.topbar a{display:inline-block;margin-top:6px}h1{font-size:25px}h2{font-size:21px}pre{font-size:13px;padding:12px}}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="index.html">Home/index</a></div>
+<main class="container">
+<section class="card">
+<div class="cell code"><div class="code-title">Kode</div><pre><code>def selectionSort(listData):
+    print(&#x27;Algoritma Selection Sort konvensional&#x27;)
+    print(&#x27;Data Awal=&#x27;,listData)
+    for outIter in range(len(listData)-1):
+        minIndex=outIter
+        for i in range(outIter+1,len(listData)):
+            if listData[i]&lt;listData[minIndex]:
+                minIndex=i
+                
+        temp=listData[outIter]
+        listData[outIter]=listData[minIndex]
+        listData[minIndex]=temp
+        print(&#x27;Iterasi ke-&#x27;,outIter+1,&#x27;:&#x27;,listData)
+    print(&#x27;Data Urut=&#x27;,listData)
+
+a=[10,2,5,8,1,20,7,12,4]
+selectionSort(a)</code></pre><div class="output"><pre>Algoritma Selection Sort konvensional
+Data Awal= [10, 2, 5, 8, 1, 20, 7, 12, 4]
+Iterasi ke- 1 : [1, 2, 5, 8, 10, 20, 7, 12, 4]
+Iterasi ke- 2 : [1, 2, 5, 8, 10, 20, 7, 12, 4]
+Iterasi ke- 3 : [1, 2, 4, 8, 10, 20, 7, 12, 5]
+Iterasi ke- 4 : [1, 2, 4, 5, 10, 20, 7, 12, 8]
+Iterasi ke- 5 : [1, 2, 4, 5, 7, 20, 10, 12, 8]
+Iterasi ke- 6 : [1, 2, 4, 5, 7, 8, 10, 12, 20]
+Iterasi ke- 7 : [1, 2, 4, 5, 7, 8, 10, 12, 20]
+Iterasi ke- 8 : [1, 2, 4, 5, 7, 8, 10, 12, 20]
+Data Urut= [1, 2, 4, 5, 7, 8, 10, 12, 20]
+</pre></div></div><div class="cell code"><div class="code-title">Kode</div><pre><code>def selectionSort(listData):
+    print(&#x27;Algoritma Selection Sort konvensional&#x27;)
+    print(&#x27;Data Awal =&#x27;, listData)
+    
+    for outIter in range(len(listData)-1):
+        minIndex = outIter
+        
+        for i in range(outIter+1, len(listData)):
+            if listData[i] &lt; listData[minIndex]:
+                minIndex = i
+        
+        # Tukar data
+        listData[outIter], listData[minIndex] = listData[minIndex], listData[outIter]
+        
+        print(&#x27;Iterasi ke-&#x27;, outIter+1, &#x27;:&#x27;, listData)
+        
+        # 🔥 CEK apakah sudah terurut
+        is_sorted = True
+        for j in range(len(listData)-1):
+            if listData[j] &gt; listData[j+1]:
+                is_sorted = False
+                break
+        
+        if is_sorted:
+            print(&#x27;Data sudah terurut, iterasi dihentikan.&#x27;)
+            break
+
+    print(&#x27;Data Urut =&#x27;, listData)
+
+
+a = [10,2,5,8,1,20,7,12,4]
+selectionSort(a)</code></pre><div class="output"><pre>Algoritma Selection Sort konvensional
+Data Awal = [10, 2, 5, 8, 1, 20, 7, 12, 4]
+Iterasi ke- 1 : [1, 2, 5, 8, 10, 20, 7, 12, 4]
+Iterasi ke- 2 : [1, 2, 5, 8, 10, 20, 7, 12, 4]
+Iterasi ke- 3 : [1, 2, 4, 8, 10, 20, 7, 12, 5]
+Iterasi ke- 4 : [1, 2, 4, 5, 10, 20, 7, 12, 8]
+Iterasi ke- 5 : [1, 2, 4, 5, 7, 20, 10, 12, 8]
+Iterasi ke- 6 : [1, 2, 4, 5, 7, 8, 10, 12, 20]
+Data sudah terurut, iterasi dihentikan.
+Data Urut = [1, 2, 4, 5, 7, 8, 10, 12, 20]
+</pre></div></div><div class="cell code"><div class="code-title">Kode</div><pre><code>def bubbleSort(listData):
+    print(&#x27;Data yang akan diurutkan : &#x27;, listData)
+    count=0
+    for outIter in range(len(listData)-1,-1,-1):
+        print(&#x27;outIter=&#x27;,outIter)
+        count=count+1
+        print (&#x27;Iterasi ke-&#x27;, count,&#x27;:&#x27;)
+        for i in range(outIter):
+            if listData[i]&gt;listData[i+1]:
+                temp=listData[i]
+                listData[i]=listData[i+1]
+                listData[i+1]=temp
+                #listData[i],listData[i+1]=listData[i+1],listData[i]
+            print(outIter,&#x27;=&#x27;,listData)
+    print(&#x27;Data urut-&#x27;,listData)
+
+a=[12,0,5,1,11,20,4,2]
+bubbleSort(a)
+b=[12,11,5,1,0]
+print(&#x27;--&#x27;)
+bubbleSort(b)</code></pre><div class="output"><pre>Data yang akan diurutkan :  [12, 0, 5, 1, 11, 20, 4, 2]
+outIter= 7
+Iterasi ke- 1 :
+7 = [0, 12, 5, 1, 11, 20, 4, 2]
+7 = [0, 5, 12, 1, 11, 20, 4, 2]
+7 = [0, 5, 1, 12, 11, 20, 4, 2]
+7 = [0, 5, 1, 11, 12, 20, 4, 2]
+7 = [0, 5, 1, 11, 12, 20, 4, 2]
+7 = [0, 5, 1, 11, 12, 4, 20, 2]
+7 = [0, 5, 1, 11, 12, 4, 2, 20]
+outIter= 6
+Iterasi ke- 2 :
+6 = [0, 5, 1, 11, 12, 4, 2, 20]
+6 = [0, 1, 5, 11, 12, 4, 2, 20]
+6 = [0, 1, 5, 11, 12, 4, 2, 20]
+6 = [0, 1, 5, 11, 12, 4, 2, 20]
+6 = [0, 1, 5, 11, 4, 12, 2, 20]
+6 = [0, 1, 5, 11, 4, 2, 12, 20]
+outIter= 5
+Iterasi ke- 3 :
+5 = [0, 1, 5, 11, 4, 2, 12, 20]
+5 = [0, 1, 5, 11, 4, 2, 12, 20]
+5 = [0, 1, 5, 11, 4, 2, 12, 20]
+5 = [0, 1, 5, 4, 11, 2, 12, 20]
+5 = [0, 1, 5, 4, 2, 11, 12, 20]
+outIter= 4
+Iterasi ke- 4 :
+4 = [0, 1, 5, 4, 2, 11, 12, 20]
+4 = [0, 1, 5, 4, 2, 11, 12, 20]
+4 = [0, 1, 4, 5, 2, 11, 12, 20]
+4 = [0, 1, 4, 2, 5, 11, 12, 20]
+outIter= 3
+Iterasi ke- 5 :
+3 = [0, 1, 4, 2, 5, 11, 12, 20]
+3 = [0, 1, 4, 2, 5, 11, 12, 20]
+3 = [0, 1, 2, 4, 5, 11, 12, 20]
+outIter= 2
+Iterasi ke- 6 :
+2 = [0, 1, 2, 4, 5, 11, 12, 20]
+2 = [0, 1, 2, 4, 5, 11, 12, 20]
+outIter= 1
+Iterasi ke- 7 :
+1 = [0, 1, 2, 4, 5, 11, 12, 20]
+outIter= 0
+Iterasi ke- 8 :
+Data urut- [0, 1, 2, 4, 5, 11, 12, 20]
+--
+Data yang akan diurutkan :  [12, 11, 5, 1, 0]
+outIter= 4
+Iterasi ke- 1 :
+4 = [11, 12, 5, 1, 0]
+4 = [11, 5, 12, 1, 0]
+4 = [11, 5, 1, 12, 0]
+4 = [11, 5, 1, 0, 12]
+outIter= 3
+Iterasi ke- 2 :
+3 = [5, 11, 1, 0, 12]
+3 = [5, 1, 11, 0, 12]
+3 = [5, 1, 0, 11, 12]
+outIter= 2
+Iterasi ke- 3 :
+2 = [1, 5, 0, 11, 12]
+2 = [1, 0, 5, 11, 12]
+outIter= 1
+Iterasi ke- 4 :
+1 = [0, 1, 5, 11, 12]
+outIter= 0
+Iterasi ke- 5 :
+Data urut- [0, 1, 5, 11, 12]
+</pre></div></div><div class="cell code"><div class="code-title">Kode</div><pre><code>lst = [5,0,1,10,7,2,5,4,6,9]
+
+print(lst)
+
+for k in range(1,len(lst)):
+    for i in range(0,len(lst)-1):
+        if lst[i]&gt;lst[i+1]:
+            lst[i],lst[i+1] = lst[i+1],lst[i]
+print(lst)</code></pre><div class="output"><pre>[5, 0, 1, 10, 7, 2, 5, 4, 6, 9]
+[0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+</pre></div></div><div class="cell code"><div class="code-title">Kode</div><pre><code>lst = [5,0,1,10,7,2,5,4,6,9]
+print(&quot;Awal:&quot;, lst)
+
+for k in range(1, len(lst)):
+    for i in range(len(lst)-1, 0, -1):
+        if lst[i] &lt; lst[i-1]:
+            lst[i], lst[i-1] = lst[i-1], lst[i]
+
+    print(&quot;Iterasi&quot;, k, &quot;:&quot;, lst)
+
+print(&quot;Hasil:&quot;, lst)</code></pre><div class="output"><pre>Awal: [5, 0, 1, 10, 7, 2, 5, 4, 6, 9]
+Iterasi 1 : [0, 5, 1, 2, 10, 7, 4, 5, 6, 9]
+Iterasi 2 : [0, 1, 5, 2, 4, 10, 7, 5, 6, 9]
+Iterasi 3 : [0, 1, 2, 5, 4, 5, 10, 7, 6, 9]
+Iterasi 4 : [0, 1, 2, 4, 5, 5, 6, 10, 7, 9]
+Iterasi 5 : [0, 1, 2, 4, 5, 5, 6, 7, 10, 9]
+Iterasi 6 : [0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+Iterasi 7 : [0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+Iterasi 8 : [0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+Iterasi 9 : [0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+Hasil: [0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+</pre></div></div><div class="cell code"><div class="code-title">Kode</div><pre><code>lst = [5,0,1,10,7,2,5,4,6,9]
+print(&quot;Awal:&quot;, lst)
+
+for k in range(len(lst)):
+    tukar = False
+    
+    for i in range(len(lst)-1, 0, -1):
+        if lst[i] &lt; lst[i-1]:
+            lst[i], lst[i-1] = lst[i-1], lst[i]
+            tukar = True
+    
+    print(&quot;Iterasi&quot;, k+1, &quot;:&quot;, lst)
+    
+    if not tukar:   # tidak ada pertukaran
+        print(&quot;Sudah terurut, berhenti di iterasi&quot;, k+1)
+        break
+
+print(&quot;Hasil:&quot;, lst)</code></pre><div class="output"><pre>Awal: [5, 0, 1, 10, 7, 2, 5, 4, 6, 9]
+Iterasi 1 : [0, 5, 1, 2, 10, 7, 4, 5, 6, 9]
+Iterasi 2 : [0, 1, 5, 2, 4, 10, 7, 5, 6, 9]
+Iterasi 3 : [0, 1, 2, 5, 4, 5, 10, 7, 6, 9]
+Iterasi 4 : [0, 1, 2, 4, 5, 5, 6, 10, 7, 9]
+Iterasi 5 : [0, 1, 2, 4, 5, 5, 6, 7, 10, 9]
+Iterasi 6 : [0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+Iterasi 7 : [0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+Sudah terurut, berhenti di iterasi 7
+Hasil: [0, 1, 2, 4, 5, 5, 6, 7, 9, 10]
+</pre></div></div><div class="cell code"><div class="code-title">Kode</div><pre><code></code></pre></div>
+</section>
+<div class="footer">C.2026 - Moch. Habdulbar</div>
+</main>
+</body>
+</html>

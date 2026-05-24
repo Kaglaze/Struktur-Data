@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Stack</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#222;font-family:Arial,Helvetica,sans-serif;line-height:1.65;font-size:16px}
+a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}
+.topbar{background:#1f2937;color:#fff;padding:14px 22px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.topbar .brand{font-weight:700;margin-right:18px}.topbar a{color:#e5e7eb;margin-right:12px;font-size:14px}.topbar a:hover{color:#fff}
+.container{max-width:980px;margin:28px auto;padding:0 18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:28px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+h1,h2,h3,h4{line-height:1.25;color:#111827;margin-top:1.2em;margin-bottom:.55em}h1{font-size:30px;border-bottom:2px solid #e5e7eb;padding-bottom:12px;margin-top:0}h2{font-size:24px;border-bottom:1px solid #eceff3;padding-bottom:8px}h3{font-size:20px}
+p{margin:0 0 14px}ul,ol{padding-left:24px;margin-top:8px;margin-bottom:16px}li{margin:4px 0}
+pre{background:#111827;color:#f9fafb;border-radius:10px;padding:16px;overflow:auto;line-height:1.5;margin:16px 0;font-size:14px;border:1px solid #0f172a}code{font-family:Consolas,'Courier New',monospace;font-size:.95em}
+:not(pre)>code{background:#eef2f7;color:#111827;padding:2px 5px;border-radius:5px}
+.cell{margin:18px 0}.code-title{font-size:13px;font-weight:700;color:#4b5563;margin-bottom:6px}.output{background:#f9fafb;border-left:4px solid #94a3b8;padding:12px 14px;border-radius:8px;margin:10px 0;overflow:auto}.output pre{background:transparent;color:#111827;border:0;padding:0;margin:0;white-space:pre-wrap}
+.err{border-left-color:#ef4444;background:#fff1f2;color:#7f1d1d}blockquote{border-left:4px solid #d1d5db;margin:16px 0;padding:10px 16px;background:#f9fafb;color:#374151}
+table{border-collapse:collapse;width:100%;margin:16px 0;display:block;overflow-x:auto}th,td{border:1px solid #d1d5db;padding:8px 10px;text-align:left}th{background:#f3f4f6}
+img{max-width:100%;height:auto;border-radius:8px;margin:10px 0}.footer{text-align:center;color:#6b7280;font-size:13px;padding:24px 0}.page-title{font-size:14px;color:#6b7280;margin-bottom:10px}
+@media(max-width:700px){.container{margin:14px auto;padding:0 12px}.card{padding:18px;border-radius:10px}.topbar{padding:12px 14px}.topbar a{display:inline-block;margin-top:6px}h1{font-size:25px}h2{font-size:21px}pre{font-size:13px;padding:12px}}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="index.html">Home/index</a></div>
+<main class="container">
+<section class="card">
+<div class="cell markdown"><h1>Quiz Stack</h1>
+</div><div class="cell markdown"><p>Question 1</p>
+<p>The best data structure to check whether an arithmetic expression has balanced parenthesis is a</p>
+<p>Stack</p>
+</div><div class="cell markdown"><p>Question 2</p>
+<p>The minimum number of stacks needed to implement a queue is</p>
+<p>2</p>
+</div><div class="cell markdown"><p>Question 3</p>
+<p>The five items: A, B, C, D, and E are pushed in a stack, one after other starting from A. The stack is popped four items and each element is inserted in a queue. The two elements are deleted from the queue and pushed back on the stack. Now one item is popped from the stack. The popped item is</p>
+<p>D</p>
+</div><div class="cell markdown"><p>Question 4</p>
+<p>Stack A has the entries a, b, c (with a on top). Stack B is empty. An entry popped out of stack A can be printed immediately or pushed to stack B. An entry popped out of the stack B can be only be printed. In this arrangement, which of the following permutations of a, b, c are not possible?</p>
+<p>c a b</p>
+</div><div class="cell markdown"><p>Question 5</p>
+<p>The five items: A, B, C, D, and E are pushed in a stack, one after other starting from A. The stack is popped four items and each element is inserted in a queue. The two elements are deleted from the queue and pushed back on the stack. Now one item is popped from the stack. The popped item is</p>
+<p>D</p>
+</div><div class="cell markdown"><p>Question 6</p>
+<p>Which one of the following is an application of Stack Data Structure?</p>
+<p>Managing function calls</p>
+<p>The stock span problem</p>
+<p>Arithmetic expression evaluation</p>
+<p>All of the above</p>
+</div><div class="cell markdown"><p>Question 7</p>
+<p>Which of the following is true about linked list implementation of stack?</p>
+<p>In push operation, if new nodes are inserted at the beginning of linked list, then in pop operation, nodes must be removed from end.</p>
+<p>In push operation, if new nodes are inserted at the end, then in pop operation, nodes must be removed from the beginning.</p>
+<p>None of the above</p>
+</div><div class="cell markdown"><p>Question 8</p>
+<p>Consider the following sequence of operations on an empty stack.</p>
+<p>Push(54);push(52);pop();push(55);push(62);s=pop();
+Consider the following sequence of operations on an empty queue.</p>
+<p>enqueue(21);enqueue(24);dequeue();enqueue(28);enqueue(32);q=dequeue();
+The value of s+q is ___________.</p>
+<p>86</p>
+</div><div class="cell markdown"><p>Question 9</p>
+<p>Convert the following infix expression into its equivalent post fix expression (A + B^ D) / (E – F) + G</p>
+<p>ABD^ + EF – / G+</p>
+</div><div class="cell markdown"><p>Question 10</p>
+<p>Which of the following is not an inherent application of stack?</p>
+<p>Job scheduling</p>
+</div><div class="cell markdown"><p>Question 11</p>
+<p>Consider the following operations performed on a stack of size 5 : Push (a); Pop() ; Push(b); Push(c); Pop(); Push(d); Pop();Pop(); Push (e) Which of the following statements is correct?</p>
+<p>Stack operations are performed smoothly</p>
+</div><div class="cell markdown"><p>Question 12</p>
+<p>The five items: A, B, C, D, and E are pushed in a stack, one after other starting from A. The stack is popped four items and each element is inserted in a queue. The two elements are deleted from the queue and pushed back on the stack. Now one item is popped from the stack. The popped item is</p>
+<p>D</p>
+</div><div class="cell markdown"><p>Question 13</p>
+<p>If the sequence of operations - push (1), push (2), pop, push (1), push (2), pop, pop, pop, push (2), pop are performed on a stack, the sequence of popped out values</p>
+<p>2,2,1,1,2</p>
+</div><div class="cell markdown"><p>Question 14</p>
+<p>The seven elements A, B, C, D, E, F and G are pushed onto a stack in reverse order, i.e., starting from G. The stack is popped five times and each element is inserted into a queue.Two elements are deleted from the queue and pushed back onto the stack. Now, one element is popped from the stack. The popped item is ________.</p>
+<p>B</p>
+</div><div class="cell markdown"><p>Question 15</p>
+<p>Following is a pseudo code of a function that takes a number as an argument, and uses a stack S to do processing.</p>
+<p>def fun(n):</p>
+<pre><code>S = []  # Say it creates an empty stack S
+while n &gt; 0:
+    # This line pushes the value of n%2 to stack S
+    S.append(n % 2)
+    n = n // 2
+
+# Run while Stack S is not empty
+while S:
+    print(S.pop(), end=' ')  # pop an element from S and print it</code></pre>
+<p>What does the above function do in general?</p>
+<p>Prints binary representation of n</p>
+</div><div class="cell markdown"><p>Question 16</p>
+<p>Which of the following permutation can be obtained in the same order using a stack assuming that input is the sequence 5, 6, 7, 8, 9 in that order?</p>
+<p>7, 8, 9, 6, 5</p>
+</div><div class="cell markdown"><p>Question 17</p>
+<p>A priority queue Q is used to implement a stack S that stores characters. PUSH(C) is implemented as INSERT(Q, C, K) where K is an appropriate integer key chosen by the implementation. POP is implemented as DELETEMIN(Q). For a sequence of operations, the keys chosen are in</p>
+<p>strictly decreasing order</p>
+</div><div class="cell markdown"><p>Question 18</p>
+<p>Consider n elements that are equally distributed in k stacks. In each stack, elements of it are arranged in ascending order (min is at the top in each of the stack and then increasing downwards). Given a queue of size n in which we have to put all n elements in increasing order. What will be the time complexity of the best known algorithm?</p>
+<p>O(n logk)</p>
+</div><div class="cell markdown"><p>Question 19</p>
+<p>Suppose a stack is to be implemented with a linked list instead of an array. What would be the effect on the time complexity of the push and pop operations of the stack implemented using linked list (Assuming stack is implemented efficiently)?</p>
+<p>O(1) for insertion and O(1) for deletion</p>
+</div><div class="cell markdown"><p>Question 20</p>
+<p>Consider the following program:</p>
+<p>class Stack:</p>
+<pre><code>def __init__(self):
+    self.items = []
+def push(self, item):
+    self.items.append(item)  # push the argument on the stack
+def pop(self):
+    return self.items.pop() if self.items else -1  # pop the top of the stack</code></pre>
+<p>def flagError():</p>
+<pre><code>print(&quot;Error!&quot;)
+exit(1)</code></pre>
+<p>s = Stack()</p>
+<p>while True:</p>
+<pre><code>try:
+    c = input()
+    if c == '':
+        break
+    c = ord(c)
+    if c &gt;= ord('0') and c &lt;= ord('9'):
+        s.push(c - ord('0'))
+    elif c == ord('+') or c == ord('*'):
+        m = s.pop()
+        n = s.pop()
+        r = n + m if c == ord('+') else n * m
+        s.push(r)
+    elif c != ord(' '):
+        flagError()
+except EOFError:
+    break</code></pre>
+<p>print(s.pop())</p>
+<p>What is the output of the program for the following input ? 5 2 * 3 3 2 + * +</p>
+<p>25</p>
+</div><div class="cell markdown"><p>Question 21</p>
+<p>A function f defined on stacks of integers satisfies the following properties. f(∅) = 0 and f (push (S, i)) = max (f(S), 0) + i for all stacks S and integers i.
+If a stack S contains the integers 2, -3, 2, -1, 2 in order from bottom to top, what is f(S)?</p>
+<p>2</p>
+</div><div class="cell markdown"><p>Question 22</p>
+<p>The result evaluating the postfix expression 10 5 + 60 6 / * 8 – is</p>
+<p>142</p>
+</div><div class="cell markdown"><p>Question 23</p>
+<p>To evaluate an expression without any embedded function calls :</p>
+<p>One stack is enough</p>
+</div><div class="cell markdown"><p>Question 24</p>
+<p>Assume that the operators +, -, × are left associative and ^ is right associative. The order of precedence (from highest to lowest) is ^, x , +, -. The postfix expression corresponding to the infix expression a + b × c - d ^ e ^ f is</p>
+<p>abc × + def ^ ^ -</p>
+</div><div class="cell markdown"><p>Question 25</p>
+<p>A single array A[1..MAXSIZE] is used to implement two stacks. The two stacks grow from opposite ends of the array. Variables top1 and top2 (topl&lt; top 2) point to the location of the topmost element in each of the stacks. If the space is to be used efficiently, the condition for “stack full” is:</p>
+<p>top1= top2 -1</p>
+</div><div class="cell markdown"><p>Question 26</p>
+<p>Let S be a stack of size n &gt;= 1. Starting with the empty stack, suppose we push the first n natural numbers in sequence, and then perform n pop operations. Assume that Push and Pop operation take X seconds each, and Y seconds elapse between the end of one such stack operation and the start of the next operation. For m &gt;= 1, define the stack-life of m as the time elapsed from the end of Push(m) to the start of the pop operation that removes m from S. The average stack-life of an element of this stack is</p>
+<p>n(X + Y)-X</p>
+</div><div class="cell markdown"><p>Question 27</p>
+<p>The following postfix expression with single digit operands is evaluated using a stack:</p>
+<p>8 2 3 ^ / 2 3 * + 5 1 * -</p>
+<p>Note that ^ is the exponentiation operator. The top two elements of the stack after the first * is evaluated are:</p>
+<p>6, 1</p>
+</div><div class="cell markdown"><p>Question 28</p>
+<p>Following is an incorrect pseudocode for the algorithm which is supposed to determine whether a sequence of parentheses is balanced:</p>
+<pre><code> declare a character stack 
+   while ( more input is available)
+   {
+      read a character
+      if ( the character is a '(' ) 
+         push it on the stack
+      else if ( the character is a ')' and the stack is not empty )
+         pop a character off the stack
+      else
+         print &quot;unbalanced&quot; and exit
+    }
+    print &quot;balanced&quot;</code></pre>
+<p>Which of these unbalanced sequences does the above code think is balanced?</p>
+<p>((())</p>
+</div><div class="cell markdown"><p>Question 29</p>
+<p>Consider the following pseudocode that uses a stack</p>
+<pre><code># Declare a stack of characters
+word = &quot;example&quot;  # Replace with the word you want to read
+char_stack = []
+
+# While there are more characters in the word to read
+for c in word:
+    char_stack.append(c)  # Push the character on the stack
+
+# While the stack is not empty
+while char_stack:
+    c = char_stack.pop()  # Pop a character off the stack
+    print(c, end='')  # Write the character to the screen</code></pre>
+<p>What is output for input &quot;geeksquiz&quot;?</p>
+<p>ziuqskeeg</p>
+</div><div class="cell markdown"><p>Question 30</p>
+<p>Consider the following statements:</p>
+<p>i. First-in-first out types of computations are efficiently supported by STACKS.</p>
+<p>ii. Implementing LISTS on linked lists is more efficient than implementing LISTS on an array for almost all the basic LIST operations.</p>
+<p>iii. Implementing QUEUES on a circular array is more efficient than implementing QUEUES on a linear array with two indices.</p>
+<p>iv. Last-in-first-out type of computations are efficiently supported by QUEUES.</p>
+<p>Which of the following is correct?</p>
+<p>(iii) is true</p>
+</div><div class="cell markdown"><h2>Soal Latihan</h2>
+<p>1️⃣Apa yang dimaksud dengan struktur data Stack?</p>
+<p>A. Struktur data dengan prinsip FIFO</p>
+<p>B. Struktur data dengan prinsip LIFO</p>
+<p>C. Struktur data berbentuk pohon</p>
+<p>D. Struktur data berbentuk graf</p>
+<p>2️⃣ Operasi utama pada Stack adalah…</p>
+<p>A. Insert dan Delete</p>
+<p>B. Push dan Pop -</p>
+<p>C. Enqueue dan Dequeue</p>
+<p>D. Search dan Sort</p>
+<p>3️⃣ Jika stack berisi:</p>
+<p>[10, 20, 30]
+Elemen terakhir yang dimasukkan adalah? 30</p>
+<p>4️⃣ Jika dilakukan operasi pop() pada stack:</p>
+<p>[5, 8, 12, 20]
+Maka elemen yang keluar adalah?  20</p>
+<p>5️⃣Diketahui stack kosong. Lakukan:</p>
+<p>Push(A)</p>
+<p>Push(B)</p>
+<p>Push(C)</p>
+<p>Pop()</p>
+<p>Pop()</p>
+<p>Push(D)</p>
+<p>Tentukan isi stack akhir! [A, D]</p>
+<p>6️⃣ Diketahui stack kosong. Lakukan operasi berikut:</p>
+<p>Push(10)</p>
+<p>Push(15)</p>
+<p>Push(20)</p>
+<p>Pop()</p>
+<p>Push(25)</p>
+<p>Tentukan isi stack akhir! [10, 15, 25]</p>
+</div><div class="cell markdown"><p>7️⃣Buatlah fungsi untuk mengecek apakah suatu string merupakan palindrome menggunakan stack.</p>
+<p>Input: &quot;KATAK&quot;</p>
+<p>Output: Palindrome</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code>def palindrome(data, s):
+    for i in data:
+        s.append(i)
+    if s == s[::-1]:
+        print(s, &quot;Merupakan palindrome&quot;)
+    else:
+        print(s, &quot;Bukan palindrome&quot;)
+
+s = []
+data = input(&quot;Masukkan kata: &quot;)
+palindrome(data, s)</code></pre><div class="output"><pre>Masukkan kata:  KASUR RUSAK
+</pre></div><div class="output"><pre>[&#x27;K&#x27;, &#x27;A&#x27;, &#x27;S&#x27;, &#x27;U&#x27;, &#x27;R&#x27;, &#x27; &#x27;, &#x27;R&#x27;, &#x27;U&#x27;, &#x27;S&#x27;, &#x27;A&#x27;, &#x27;K&#x27;] Merupakan palindrome
+</pre></div></div><div class="cell markdown"><ul>
+<li>Riwayat Undo (Simulasi Undo Text Editor)</li>
+</ul>
+<p>Buatlah program sederhana untuk mensimulasikan fitur Undo pada editor teks.</p>
+<p>Ketentuan:</p>
+<p>User memasukkan beberapa teks.</p>
+<p>Setiap input disimpan ke dalam stack.</p>
+<p>Jika user mengetik UNDO, maka teks terakhir dihapus.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code>def undo(kata, stack):
+    if kata == &quot;UNDO&quot;:
+        stack.pop()
+        print(stack)
+    else:
+        stack.append(kata)
+        print(stack)
+
+stack = [&quot;KATAK&quot;, &quot;UDANG&quot;, &quot;IKAN&quot;]
+teks = input(&quot;Masukkan kata: &quot;)
+undo(teks, stack)</code></pre><div class="output"><pre>Masukkan kata:  UNDO
+</pre></div><div class="output"><pre>[&#x27;KATAK&#x27;, &#x27;UDANG&#x27;]
+</pre></div></div><div class="cell code"><div class="code-title">Kode</div><pre><code>stakk = []
+while True:
+    teks = input(&quot;Masukkan kata: &quot;)
+    if teks == &quot;EXIT&quot;:
+        break
+    elif teks == &quot;UNDO&quot;:
+        if stakk:
+            stakk.pop()
+            print(&quot;Kata terakhir dihapus&quot;)
+        else:
+            print(&quot;Stack Empty&quot;)
+    else:
+        stakk.append(teks)
+    print(stakk)</code></pre><div class="output"><pre>Masukkan kata:  PARI
+</pre></div><div class="output"><pre>[&#x27;PARI&#x27;]
+</pre></div><div class="output"><pre>Masukkan kata:  KATAK
+</pre></div><div class="output"><pre>[&#x27;PARI&#x27;, &#x27;KATAK&#x27;]
+</pre></div><div class="output"><pre>Masukkan kata:  UNDO
+</pre></div><div class="output"><pre>Kata terakhir dihapus
+[&#x27;PARI&#x27;]
+</pre></div><div class="output"><pre>Masukkan kata:  EXIT
+</pre></div></div><div class="cell markdown"><ul>
+<li>Buat program untuk membalik urutan kata dalam sebuah kalimat menggunakan stack.</li>
+</ul>
+<p>Input: Saya belajar struktur data</p>
+<p>Output: data struktur belajar Saya</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code>def reverse(teks, stak):
+    kata = teks.split()
+    for i in kata[::-1]:
+        stak.append(i)
+        kalimat = &quot; &quot;.join(stak)
+    print(&quot;Reverse:&quot; ,kalimat)
+
+stak = []
+teks = input(&quot;Masukkan kata: &quot;)
+reverse(teks, stak)</code></pre><div class="output"><pre>Masukkan kata:  Saya belajar struktur data
+</pre></div><div class="output"><pre>Reverse: data struktur belajar Saya
+</pre></div></div><div class="cell markdown"><ul>
+<li>Buat program yang:</li>
+</ul>
+<p>Mengisi stack dengan beberapa angka.</p>
+<p>Menghitung jumlah elemen dalam stack tanpa menggunakan fungsi bawaan len()</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code>def angka(stk):
+    elemen = 0
+    for i in stk:
+        elemen += 1
+    print(f&quot;Jumlah elemen pada {stk} berjumlah {elemen}&quot;)
+
+stk = [10, 4, 1, 6, 7, 19, 20]
+angka(stk)</code></pre><div class="output"><pre>Jumlah elemen pada [10, 4, 1, 6, 7, 19, 20] berjumlah 7
+</pre></div></div><div class="cell markdown"><ul>
+<li>Diketahui stack berisi angka:</li>
+</ul>
+<p>[10, 20, 30, 40, 50]</p>
+<p>Buat program untuk menghapus angka 30 tanpa merusak urutan elemen lainnya.</p>
+</div><div class="cell markdown"></div><div class="cell markdown"></div><div class="cell markdown"></div><div class="cell markdown"></div>
+</section>
+<div class="footer">C.2026 - Moch. Habdulbar</div>
+</main>
+</body>
+</html>

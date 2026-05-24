@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6.1 Hashing</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6f8;color:#222;font-family:Arial,Helvetica,sans-serif;line-height:1.65;font-size:16px}
+a{color:#2563eb;text-decoration:none}a:hover{text-decoration:underline}
+.topbar{background:#1f2937;color:#fff;padding:14px 22px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.topbar .brand{font-weight:700;margin-right:18px}.topbar a{color:#e5e7eb;margin-right:12px;font-size:14px}.topbar a:hover{color:#fff}
+.container{max-width:980px;margin:28px auto;padding:0 18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:28px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+h1,h2,h3,h4{line-height:1.25;color:#111827;margin-top:1.2em;margin-bottom:.55em}h1{font-size:30px;border-bottom:2px solid #e5e7eb;padding-bottom:12px;margin-top:0}h2{font-size:24px;border-bottom:1px solid #eceff3;padding-bottom:8px}h3{font-size:20px}
+p{margin:0 0 14px}ul,ol{padding-left:24px;margin-top:8px;margin-bottom:16px}li{margin:4px 0}
+pre{background:#111827;color:#f9fafb;border-radius:10px;padding:16px;overflow:auto;line-height:1.5;margin:16px 0;font-size:14px;border:1px solid #0f172a}code{font-family:Consolas,'Courier New',monospace;font-size:.95em}
+:not(pre)>code{background:#eef2f7;color:#111827;padding:2px 5px;border-radius:5px}
+.cell{margin:18px 0}.code-title{font-size:13px;font-weight:700;color:#4b5563;margin-bottom:6px}.output{background:#f9fafb;border-left:4px solid #94a3b8;padding:12px 14px;border-radius:8px;margin:10px 0;overflow:auto}.output pre{background:transparent;color:#111827;border:0;padding:0;margin:0;white-space:pre-wrap}
+.err{border-left-color:#ef4444;background:#fff1f2;color:#7f1d1d}blockquote{border-left:4px solid #d1d5db;margin:16px 0;padding:10px 16px;background:#f9fafb;color:#374151}
+table{border-collapse:collapse;width:100%;margin:16px 0;display:block;overflow-x:auto}th,td{border:1px solid #d1d5db;padding:8px 10px;text-align:left}th{background:#f3f4f6}
+img{max-width:100%;height:auto;border-radius:8px;margin:10px 0}.footer{text-align:center;color:#6b7280;font-size:13px;padding:24px 0}.page-title{font-size:14px;color:#6b7280;margin-bottom:10px}
+@media(max-width:700px){.container{margin:14px auto;padding:0 12px}.card{padding:18px;border-radius:10px}.topbar{padding:12px 14px}.topbar a{display:inline-block;margin-top:6px}h1{font-size:25px}h2{font-size:21px}pre{font-size:13px;padding:12px}}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="index.html">Home/index</a></div>
+<main class="container">
+<section class="card">
+<div class="cell markdown"><h1>6.1 Hashing</h1>
+<p>Hashing adalah teknik untuk menyimpan dan mengambil data dengan bantuan <strong>hash key</strong> atau <strong>hash index</strong>.
+Data yang awalnya besar atau beragam akan diubah menjadi indeks tertentu melalui <strong>hash function</strong>.</p>
+<p>Pada materi ini, pembahasan hashing meliputi:</p>
+<ol>
+<li>Pengertian Hashing</li>
+<li>Hash Function</li>
+<li>Hash Table</li>
+<li>Collision</li>
+<li>Open Addressing</li>
+<li>Linear Probing</li>
+<li>Quadratic Probing</li>
+<li>Close Address / Chaining</li>
+<li>Contoh implementasi sederhana menggunakan Python</li>
+</ol>
+<p>Catatan ini dibuat dengan bentuk seperti notebook sebelumnya, yaitu berisi penjelasan, contoh kode, output, dan analisa singkat.</p>
+</div><div class="cell markdown"><h2>Pengertian Hashing</h2>
+<p><strong>Hashing</strong> adalah proses mengubah sebuah data atau key menjadi nilai indeks tertentu agar data dapat disimpan dan dicari dengan cepat.</p>
+<p>Secara sederhana, hashing digunakan agar program tidak perlu mencari data satu per satu dari awal sampai akhir.
+Jika hash function yang digunakan baik, proses seperti <strong>insert</strong>, <strong>search</strong>, dan <strong>delete</strong> dapat berjalan lebih cepat.</p>
+<p>Contoh penggunaan hashing dalam kehidupan nyata:</p>
+<ol>
+<li>Menyimpan data pada dictionary.</li>
+<li>Mengecek data yang sudah pernah muncul.</li>
+<li>Menyimpan password dalam bentuk hash.</li>
+<li>Membuat indeks pada database.</li>
+<li>Menghitung frekuensi kemunculan data.</li>
+</ol>
+<p>Dalam Python, konsep hashing sering terlihat pada penggunaan <code>dict</code> dan <code>set</code>.</p>
+</div><div class="cell markdown"><h2>Komponen Utama Hashing</h2>
+<p>Dalam hashing terdapat tiga komponen utama:</p>
+<ol>
+<li><p><strong>Key</strong><br />
+Key adalah nilai yang dimasukkan ke dalam hash function. Contohnya angka <code>54</code>, <code>26</code>, atau teks seperti <code>&quot;nama&quot;</code>.</p>
+</li>
+<li><p><strong>Hash Function</strong><br />
+Hash function adalah fungsi yang mengubah key menjadi index.</p>
+</li>
+<li><p><strong>Hash Table</strong><br />
+Hash table adalah tempat penyimpanan data. Bentuk sederhananya dapat berupa list atau array.</p>
+</li>
+</ol>
+<p>Contoh rumus hash function yang sederhana:</p>
+<pre><code class="language-python">index = key % ukuran_tabel
+</code></pre>
+<p>Pada PPT, rumus yang digunakan dituliskan sebagai:</p>
+<pre><code class="language-python">Hash Value = Key mod (n + 1)
+</code></pre>
+<p>Jika ukuran tabel adalah <code>11</code>, maka hash value dapat dihitung dengan:</p>
+<pre><code class="language-python">index = key % 11
+</code></pre>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh hash function sederhana
+
+ukuran_tabel = 11
+
+def hash_function(key):
+    return key % ukuran_tabel
+
+data = [54, 26, 93, 17, 77, 31, 44, 55, 20]
+
+for angka in data:
+    print(&quot;Key:&quot;, angka, &quot;-&gt; Index:&quot;, hash_function(angka))</code></pre><div class="output"><pre>Key: 54 -&gt; Index: 10
+Key: 26 -&gt; Index: 4
+Key: 93 -&gt; Index: 5
+Key: 17 -&gt; Index: 6
+Key: 77 -&gt; Index: 0
+Key: 31 -&gt; Index: 9
+Key: 44 -&gt; Index: 0
+Key: 55 -&gt; Index: 0
+Key: 20 -&gt; Index: 9
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Kode Hash Function</h2>
+<pre><code class="language-python">ukuran_tabel = 11
+</code></pre>
+<p>Kode tersebut membuat ukuran hash table sebanyak <code>11</code> slot.</p>
+<pre><code class="language-python">def hash_function(key):
+    return key % ukuran_tabel
+</code></pre>
+<p>Fungsi tersebut menerima sebuah <code>key</code>, kemudian mengembalikan hasil sisa bagi dari <code>key</code> terhadap ukuran tabel.</p>
+<p>Contoh:</p>
+<pre><code class="language-python">54 % 11 = 10
+</code></pre>
+<p>Artinya, data <code>54</code> akan ditempatkan pada indeks ke-<code>10</code>.</p>
+<p>Hash function yang baik sebaiknya mampu menyebarkan data secara merata agar tidak terlalu banyak data yang masuk ke indeks yang sama.</p>
+</div><div class="cell markdown"><h1>A. Collision pada Hashing</h1>
+<h2>Pengertian Collision</h2>
+<p><strong>Collision</strong> terjadi ketika dua atau lebih data menghasilkan index hash yang sama.</p>
+<p>Misalnya:</p>
+<pre><code class="language-python">77 % 11 = 0
+44 % 11 = 0
+55 % 11 = 0
+</code></pre>
+<p>Ketiga data tersebut sama-sama masuk ke indeks <code>0</code>.
+Karena satu slot tidak bisa langsung menampung beberapa data jika menggunakan bentuk tabel biasa, maka diperlukan teknik penanganan collision.</p>
+<p>Beberapa cara menangani collision:</p>
+<ol>
+<li><strong>Open Addressing</strong></li>
+<li><strong>Linear Probing</strong></li>
+<li><strong>Quadratic Probing</strong></li>
+<li><strong>Close Address / Chaining</strong></li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh melihat collision
+
+ukuran_tabel = 11
+data = [54, 26, 93, 17, 77, 31, 44, 55, 20]
+
+hasil_hash = {}
+
+for angka in data:
+    index = angka % ukuran_tabel
+
+    if index not in hasil_hash:
+        hasil_hash[index] = []
+
+    hasil_hash[index].append(angka)
+
+for index in hasil_hash:
+    print(&quot;Index&quot;, index, &quot;:&quot;, hasil_hash[index])</code></pre><div class="output"><pre>Index 10 : [54]
+Index 4 : [26]
+Index 5 : [93]
+Index 6 : [17]
+Index 0 : [77, 44, 55]
+Index 9 : [31, 20]
+</pre></div></div><div class="cell markdown"><h2>Analisa Collision</h2>
+<p>Dari output kode, dapat terlihat bahwa beberapa indeks dapat memiliki lebih dari satu data.</p>
+<p>Contoh:</p>
+<pre><code class="language-python">Index 0 : [77, 44, 55]
+</code></pre>
+<p>Artinya, <code>77</code>, <code>44</code>, dan <code>55</code> mengalami collision karena memiliki index hash yang sama.</p>
+<p>Collision tidak berarti program salah, tetapi collision harus ditangani dengan metode tertentu agar data tetap dapat disimpan dan dicari kembali.</p>
+</div><div class="cell markdown"><h1>B. Open Addressing</h1>
+<h2>Pengertian Open Addressing</h2>
+<p><strong>Open Addressing</strong> adalah metode penanganan collision dengan cara mencari slot kosong lain di dalam hash table yang sama.</p>
+<p>Jika index utama sudah terisi, program tidak membuat list tambahan, tetapi mencari posisi kosong lain.</p>
+<p>Ciri-ciri Open Addressing:</p>
+<ol>
+<li>Semua data tetap disimpan di dalam satu hash table.</li>
+<li>Jika terjadi collision, program melakukan pencarian slot kosong.</li>
+<li>Hash table dapat penuh jika semua slot sudah terisi.</li>
+<li>Proses pencarian slot disebut <strong>probing</strong>.</li>
+</ol>
+<p>Jenis probing yang dibahas pada materi ini:</p>
+<ol>
+<li>Linear Probing</li>
+<li>Quadratic Probing</li>
+</ol>
+</div><div class="cell markdown"><h1>C. Linear Probing</h1>
+<h2>Pengertian Linear Probing</h2>
+<p><strong>Linear Probing</strong> adalah teknik mencari slot kosong dengan cara bergerak satu per satu secara berurutan.</p>
+<p>Jika index awal penuh, maka program mengecek:</p>
+<pre><code class="language-python">index + 1
+index + 2
+index + 3
+</code></pre>
+<p>Jika sudah sampai akhir tabel, pengecekan dapat kembali ke awal menggunakan operator modulo.</p>
+<p>Rumus sederhana:</p>
+<pre><code class="language-python">posisi = (index_awal + i) % ukuran_tabel
+</code></pre>
+<p>Keterangan:</p>
+<ol>
+<li><code>index_awal</code> adalah hasil dari hash function.</li>
+<li><code>i</code> adalah jumlah langkah percobaan.</li>
+<li><code>% ukuran_tabel</code> digunakan agar index tidak keluar dari batas list.</li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Linear Probing
+
+ukuran_tabel = 11
+table = [None] * ukuran_tabel
+data = [54, 26, 93, 17, 77, 31, 44, 55, 20, 25]
+
+def hash_function(key):
+    return key % ukuran_tabel
+
+def insert_linear(key):
+    index_awal = hash_function(key)
+
+    print(&quot;Memasukkan:&quot;, key)
+    print(&quot;Index awal:&quot;, index_awal)
+
+    for i in range(ukuran_tabel):
+        posisi = (index_awal + i) % ukuran_tabel
+
+        print(&quot;Cek posisi:&quot;, posisi)
+
+        if table[posisi] is None:
+            table[posisi] = key
+            print(&quot;Data masuk ke posisi:&quot;, posisi)
+            print(&quot;Tabel sekarang:&quot;, table)
+            print()
+            return
+
+    print(&quot;Tabel penuh, data gagal dimasukkan&quot;)
+    print()
+
+for angka in data:
+    insert_linear(angka)</code></pre><div class="output"><pre>Memasukkan: 54
+Index awal: 10
+Cek posisi: 10
+Data masuk ke posisi: 10
+Tabel sekarang: [None, None, None, None, None, None, None, None, None, None, 54]
+
+Memasukkan: 26
+Index awal: 4
+Cek posisi: 4
+Data masuk ke posisi: 4
+Tabel sekarang: [None, None, None, None, 26, None, None, None, None, None, 54]
+
+Memasukkan: 93
+Index awal: 5
+Cek posisi: 5
+Data masuk ke posisi: 5
+Tabel sekarang: [None, None, None, None, 26, 93, None, None, None, None, 54]
+
+Memasukkan: 17
+Index awal: 6
+Cek posisi: 6
+Data masuk ke posisi: 6
+Tabel sekarang: [None, None, None, None, 26, 93, 17, None, None, None, 54]
+
+Memasukkan: 77
+Index awal: 0
+Cek posisi: 0
+Data masuk ke posisi: 0
+Tabel sekarang: [77, None, None, None, 26, 93, 17, None, None, None, 54]
+
+Memasukkan: 31
+Index awal: 9
+Cek posisi: 9
+Data masuk ke posisi: 9
+Tabel sekarang: [77, None, None, None, 26, 93, 17, None, None, 31, 54]
+
+Memasukkan: 44
+Index awal: 0
+Cek posisi: 0
+Cek posisi: 1
+Data masuk ke posisi: 1
+Tabel sekarang: [77, 44, None, None, 26, 93, 17, None, None, 31, 54]
+
+Memasukkan: 55
+Index awal: 0
+Cek posisi: 0
+Cek posisi: 1
+Cek posisi: 2
+Data masuk ke posisi: 2
+Tabel sekarang: [77, 44, 55, None, 26, 93, 17, None, None, 31, 54]
+
+Memasukkan: 20
+Index awal: 9
+Cek posisi: 9
+Cek posisi: 10
+Cek posisi: 0
+Cek posisi: 1
+Cek posisi: 2
+Cek posisi: 3
+Data masuk ke posisi: 3
+Tabel sekarang: [77, 44, 55, 20, 26, 93, 17, None, None, 31, 54]
+
+Memasukkan: 25
+Index awal: 3
+Cek posisi: 3
+Cek posisi: 4
+Cek posisi: 5
+Cek posisi: 6
+Cek posisi: 7
+Data masuk ke posisi: 7
+Tabel sekarang: [77, 44, 55, 20, 26, 93, 17, 25, None, 31, 54]
+
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Kode Linear Probing</h2>
+<pre><code class="language-python">table = [None] * ukuran_tabel
+</code></pre>
+<p>Kode tersebut membuat hash table kosong dengan isi awal <code>None</code>.</p>
+<pre><code class="language-python">posisi = (index_awal + i) % ukuran_tabel
+</code></pre>
+<p>Kode tersebut digunakan untuk mencari slot berikutnya secara berurutan.</p>
+<p>Jika posisi yang dicek masih kosong, data dimasukkan ke posisi tersebut:</p>
+<pre><code class="language-python">if table[posisi] is None:
+    table[posisi] = key
+</code></pre>
+<p>Linear Probing mudah dipahami, tetapi dapat menyebabkan <strong>clustering</strong>, yaitu penumpukan data pada area slot yang berdekatan.</p>
+</div><div class="cell markdown"><h1>D. Quadratic Probing</h1>
+<h2>Pengertian Quadratic Probing</h2>
+<p><strong>Quadratic Probing</strong> adalah teknik menangani collision dengan pola lompatan kuadrat.</p>
+<p>Jika index awal penuh, maka program mengecek:</p>
+<pre><code class="language-python">index + 1²
+index + 2²
+index + 3²
+index + 4²
+</code></pre>
+<p>Rumus sederhana:</p>
+<pre><code class="language-python">posisi = (index_awal + i * i) % ukuran_tabel
+</code></pre>
+<p>Quadratic Probing digunakan untuk mengurangi penumpukan yang sering terjadi pada Linear Probing.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Quadratic Probing
+
+ukuran_tabel = 11
+table = [None] * ukuran_tabel
+data = [54, 26, 93, 17, 77, 31, 44, 55, 20]
+
+def hash_function(key):
+    return key % ukuran_tabel
+
+def insert_quadratic(key):
+    index_awal = hash_function(key)
+
+    print(&quot;Memasukkan:&quot;, key)
+    print(&quot;Index awal:&quot;, index_awal)
+
+    for i in range(ukuran_tabel):
+        posisi = (index_awal + i * i) % ukuran_tabel
+
+        print(&quot;Cek posisi:&quot;, posisi)
+
+        if table[posisi] is None:
+            table[posisi] = key
+            print(&quot;Data masuk ke posisi:&quot;, posisi)
+            print(&quot;Tabel sekarang:&quot;, table)
+            print()
+            return
+
+    print(&quot;Tabel penuh, data gagal dimasukkan&quot;)
+    print()
+
+for angka in data:
+    insert_quadratic(angka)</code></pre><div class="output"><pre>Memasukkan: 54
+Index awal: 10
+Cek posisi: 10
+Data masuk ke posisi: 10
+Tabel sekarang: [None, None, None, None, None, None, None, None, None, None, 54]
+
+Memasukkan: 26
+Index awal: 4
+Cek posisi: 4
+Data masuk ke posisi: 4
+Tabel sekarang: [None, None, None, None, 26, None, None, None, None, None, 54]
+
+Memasukkan: 93
+Index awal: 5
+Cek posisi: 5
+Data masuk ke posisi: 5
+Tabel sekarang: [None, None, None, None, 26, 93, None, None, None, None, 54]
+
+Memasukkan: 17
+Index awal: 6
+Cek posisi: 6
+Data masuk ke posisi: 6
+Tabel sekarang: [None, None, None, None, 26, 93, 17, None, None, None, 54]
+
+Memasukkan: 77
+Index awal: 0
+Cek posisi: 0
+Data masuk ke posisi: 0
+Tabel sekarang: [77, None, None, None, 26, 93, 17, None, None, None, 54]
+
+Memasukkan: 31
+Index awal: 9
+Cek posisi: 9
+Data masuk ke posisi: 9
+Tabel sekarang: [77, None, None, None, 26, 93, 17, None, None, 31, 54]
+
+Memasukkan: 44
+Index awal: 0
+Cek posisi: 0
+Cek posisi: 1
+Data masuk ke posisi: 1
+Tabel sekarang: [77, 44, None, None, 26, 93, 17, None, None, 31, 54]
+
+Memasukkan: 55
+Index awal: 0
+Cek posisi: 0
+Cek posisi: 1
+Cek posisi: 4
+Cek posisi: 9
+Cek posisi: 5
+Cek posisi: 3
+Data masuk ke posisi: 3
+Tabel sekarang: [77, 44, None, 55, 26, 93, 17, None, None, 31, 54]
+
+Memasukkan: 20
+Index awal: 9
+Cek posisi: 9
+Cek posisi: 10
+Cek posisi: 2
+Data masuk ke posisi: 2
+Tabel sekarang: [77, 44, 20, 55, 26, 93, 17, None, None, 31, 54]
+
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Kode Quadratic Probing</h2>
+<pre><code class="language-python">posisi = (index_awal + i * i) % ukuran_tabel
+</code></pre>
+<p>Bagian <code>i * i</code> menunjukkan bahwa jarak pengecekan menggunakan pola kuadrat.</p>
+<p>Contoh urutan langkah:</p>
+<pre><code class="language-python">0² = 0
+1² = 1
+2² = 4
+3² = 9
+</code></pre>
+<p>Dengan pola ini, posisi yang dicek tidak selalu bersebelahan langsung.
+Hal tersebut dapat membantu mengurangi penumpukan data seperti pada Linear Probing.</p>
+</div><div class="cell markdown"><h1>E. Close Address / Chaining</h1>
+<h2>Pengertian Chaining</h2>
+<p><strong>Chaining</strong> adalah teknik menangani collision dengan cara membuat setiap slot pada hash table berisi list.</p>
+<p>Jika beberapa data masuk ke index yang sama, data tersebut tetap disimpan pada index tersebut, tetapi ditambahkan ke dalam list.</p>
+<p>Contoh:</p>
+<pre><code class="language-python">Index 0 : [77, 44, 55]
+</code></pre>
+<p>Artinya data <code>77</code>, <code>44</code>, dan <code>55</code> berada pada slot yang sama, tetapi disimpan dalam bentuk rantai atau chain.</p>
+<p>Keunggulan Chaining:</p>
+<ol>
+<li>Lebih fleksibel ketika banyak collision.</li>
+<li>Tabel tidak langsung gagal hanya karena satu index sudah terisi.</li>
+<li>Implementasinya mudah dipahami menggunakan list di dalam list.</li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Chaining / Close Address
+
+ukuran_tabel = 11
+table = [[] for i in range(ukuran_tabel)]
+data = [54, 26, 93, 17, 77, 31, 44, 55, 20]
+
+def hash_function(key):
+    return key % ukuran_tabel
+
+def insert_chaining(key):
+    index = hash_function(key)
+    table[index].append(key)
+    print(&quot;Data&quot;, key, &quot;masuk ke index&quot;, index)
+    print(&quot;Tabel sekarang:&quot;, table)
+    print()
+
+for angka in data:
+    insert_chaining(angka)</code></pre><div class="output"><pre>Data 54 masuk ke index 10
+Tabel sekarang: [[], [], [], [], [], [], [], [], [], [], [54]]
+
+Data 26 masuk ke index 4
+Tabel sekarang: [[], [], [], [], [26], [], [], [], [], [], [54]]
+
+Data 93 masuk ke index 5
+Tabel sekarang: [[], [], [], [], [26], [93], [], [], [], [], [54]]
+
+Data 17 masuk ke index 6
+Tabel sekarang: [[], [], [], [], [26], [93], [17], [], [], [], [54]]
+
+Data 77 masuk ke index 0
+Tabel sekarang: [[77], [], [], [], [26], [93], [17], [], [], [], [54]]
+
+Data 31 masuk ke index 9
+Tabel sekarang: [[77], [], [], [], [26], [93], [17], [], [], [31], [54]]
+
+Data 44 masuk ke index 0
+Tabel sekarang: [[77, 44], [], [], [], [26], [93], [17], [], [], [31], [54]]
+
+Data 55 masuk ke index 0
+Tabel sekarang: [[77, 44, 55], [], [], [], [26], [93], [17], [], [], [31], [54]]
+
+Data 20 masuk ke index 9
+Tabel sekarang: [[77, 44, 55], [], [], [], [26], [93], [17], [], [], [31, 20], [54]]
+
+</pre></div></div><div class="cell markdown"><h2>Penjelasan Kode Chaining</h2>
+<pre><code class="language-python">table = [[] for i in range(ukuran_tabel)]
+</code></pre>
+<p>Kode tersebut membuat hash table yang setiap slotnya berisi list kosong.</p>
+<pre><code class="language-python">table[index].append(key)
+</code></pre>
+<p>Jika data memiliki index yang sama, data baru tidak menggantikan data lama, tetapi ditambahkan ke list pada index tersebut.</p>
+<p>Contoh hasil:</p>
+<pre><code class="language-python">[[77, 44, 55], [], [], [], [26], [93], [17], [], [], [31, 20], [54]]
+</code></pre>
+<p>Artinya slot index <code>0</code> berisi tiga data, yaitu <code>77</code>, <code>44</code>, dan <code>55</code>.</p>
+</div><div class="cell markdown"><h1>F. Search Data pada Hash Table dengan Chaining</h1>
+<p>Setelah data dimasukkan ke hash table, data juga harus dapat dicari kembali.</p>
+<p>Pada Chaining, proses pencarian dilakukan dengan langkah berikut:</p>
+<ol>
+<li>Hitung index menggunakan hash function.</li>
+<li>Masuk ke list pada index tersebut.</li>
+<li>Periksa apakah data ada di dalam list.</li>
+<li>Jika ada, data ditemukan.</li>
+<li>Jika tidak ada, data tidak ditemukan.</li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Search data pada hash table chaining
+
+ukuran_tabel = 11
+table = [[] for i in range(ukuran_tabel)]
+data = [54, 26, 93, 17, 77, 31, 44, 55, 20]
+
+def hash_function(key):
+    return key % ukuran_tabel
+
+def insert_chaining(key):
+    index = hash_function(key)
+    table[index].append(key)
+
+def search_chaining(key):
+    index = hash_function(key)
+
+    print(&quot;Mencari data:&quot;, key)
+    print(&quot;Index hash:&quot;, index)
+    print(&quot;Isi slot:&quot;, table[index])
+
+    if key in table[index]:
+        print(&quot;Status: data ditemukan&quot;)
+    else:
+        print(&quot;Status: data tidak ditemukan&quot;)
+
+    print()
+
+for angka in data:
+    insert_chaining(angka)
+
+print(&quot;Hash table:&quot;, table)
+print()
+
+search_chaining(44)
+search_chaining(99)</code></pre><div class="output"><pre>Hash table: [[77, 44, 55], [], [], [], [26], [93], [17], [], [], [31, 20], [54]]
+
+Mencari data: 44
+Index hash: 0
+Isi slot: [77, 44, 55]
+Status: data ditemukan
+
+Mencari data: 99
+Index hash: 0
+Isi slot: [77, 44, 55]
+Status: data tidak ditemukan
+
+</pre></div></div><div class="cell markdown"><h2>Analisa Search pada Chaining</h2>
+<p>Pada pencarian data <code>44</code>, program menghitung index terlebih dahulu:</p>
+<pre><code class="language-python">44 % 11 = 0
+</code></pre>
+<p>Kemudian program memeriksa isi list pada index <code>0</code>.</p>
+<p>Karena <code>44</code> ada di dalam list tersebut, maka data ditemukan.</p>
+<p>Pada pencarian data <code>99</code>, program juga menghitung index terlebih dahulu.
+Namun, karena <code>99</code> tidak ada di slot hasil hash-nya, maka data dinyatakan tidak ditemukan.</p>
+</div><div class="cell markdown"><h1>G. Perbandingan Linear Probing, Quadratic Probing, dan Chaining</h1>
+<table>
+<thead>
+<tr>
+  <th>Metode</th>
+  <th>Cara Menangani Collision</th>
+  <th>Kelebihan</th>
+  <th>Kekurangan</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Linear Probing</td>
+  <td>Mencari slot kosong berikutnya secara berurutan</td>
+  <td>Mudah dibuat dan dipahami</td>
+  <td>Dapat menyebabkan penumpukan data</td>
+</tr>
+<tr>
+  <td>Quadratic Probing</td>
+  <td>Mencari slot kosong dengan pola kuadrat</td>
+  <td>Mengurangi penumpukan berurutan</td>
+  <td>Tidak selalu mengecek semua slot pada kondisi tertentu</td>
+</tr>
+<tr>
+  <td>Chaining</td>
+  <td>Menyimpan beberapa data dalam list pada index yang sama</td>
+  <td>Fleksibel saat banyak collision</td>
+  <td>Membutuhkan list tambahan pada setiap slot</td>
+</tr>
+</tbody>
+</table>
+<p>Dari ketiga metode tersebut, pemilihan metode tergantung pada kebutuhan program dan kondisi data.</p>
+</div><div class="cell markdown"><h1>H. Contoh Penggunaan Hashing dengan Dictionary</h1>
+<p>Dalam Python, <code>dict</code> adalah contoh struktur data yang menggunakan konsep key dan value.</p>
+<p>Contoh:</p>
+<pre><code class="language-python">mahasiswa = {
+    &quot;nama&quot;: &quot;Habdulbar&quot;,
+    &quot;nim&quot;: &quot;250411100120&quot;
+}
+</code></pre>
+<p>Bagian <code>&quot;nama&quot;</code> dan <code>&quot;nim&quot;</code> adalah key, sedangkan <code>&quot;Habdulbar&quot;</code> dan <code>&quot;250411100120&quot;</code> adalah value.</p>
+<p>Dictionary membuat data mudah dicari berdasarkan key.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh sederhana dictionary
+
+mahasiswa = {
+    &quot;nama&quot;: &quot;Moch. Habdulbar&quot;,
+    &quot;nim&quot;: &quot;250411100120&quot;,
+    &quot;prodi&quot;: &quot;Teknik Informatika&quot;
+}
+
+print(&quot;Nama:&quot;, mahasiswa[&quot;nama&quot;])
+print(&quot;NIM:&quot;, mahasiswa[&quot;nim&quot;])
+print(&quot;Prodi:&quot;, mahasiswa[&quot;prodi&quot;])</code></pre><div class="output"><pre>Nama: Moch. Habdulbar
+NIM: 250411100120
+Prodi: Teknik Informatika
+</pre></div></div><div class="cell markdown"><h1>I. Contoh Penggunaan Hashing dengan Set</h1>
+<p><code>set</code> digunakan untuk menyimpan data unik.
+Jika ada data yang sama dimasukkan lebih dari satu kali, <code>set</code> hanya menyimpan satu data saja.</p>
+<p>Konsep ini berguna untuk mendeteksi duplikat.</p>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># Contoh mendeteksi data duplikat menggunakan set
+
+data = [1, 2, 3, 4, 2, 5]
+
+data_unik = set(data)
+
+print(&quot;Data asli:&quot;, data)
+print(&quot;Data unik:&quot;, data_unik)
+
+if len(data) != len(data_unik):
+    print(&quot;Status: terdapat data duplikat&quot;)
+else:
+    print(&quot;Status: tidak ada data duplikat&quot;)</code></pre><div class="output"><pre>Data asli: [1, 2, 3, 4, 2, 5]
+Data unik: {1, 2, 3, 4, 5}
+Status: terdapat data duplikat
+</pre></div></div><div class="cell markdown"><h1>J. Kesimpulan</h1>
+<p>Hashing adalah teknik penyimpanan dan pencarian data dengan menggunakan hash function untuk menentukan index penyimpanan.</p>
+<p>Poin penting dari materi hashing:</p>
+<ol>
+<li>Hashing digunakan untuk mempercepat proses pencarian, penyisipan, dan penghapusan data.</li>
+<li>Hash function mengubah key menjadi index pada hash table.</li>
+<li>Collision terjadi jika beberapa key menghasilkan index yang sama.</li>
+<li>Collision dapat ditangani dengan Open Addressing atau Chaining.</li>
+<li>Linear Probing mencari slot kosong secara berurutan.</li>
+<li>Quadratic Probing mencari slot kosong dengan pola kuadrat.</li>
+<li>Chaining menyimpan beberapa data pada index yang sama menggunakan list.</li>
+<li>Dalam Python, konsep hashing dapat ditemukan pada <code>dict</code> dan <code>set</code>.</li>
+</ol>
+<p>Dengan memahami hashing, kita dapat membuat struktur data yang lebih efisien untuk menyimpan dan mencari data.</p>
+</div><div class="cell markdown"><h1>K. Latihan</h1>
+<p>Kerjakan latihan berikut untuk memahami materi hashing.</p>
+<ol>
+<li>Buat hash table berukuran <code>10</code>.</li>
+<li>Masukkan data berikut ke dalam hash table:</li>
+</ol>
+<pre><code class="language-python">[12, 22, 32, 42, 52]
+</code></pre>
+<ol start="3">
+<li>Gunakan rumus:</li>
+</ol>
+<pre><code class="language-python">index = key % 10
+</code></pre>
+<ol start="4">
+<li>Tentukan data mana saja yang mengalami collision.</li>
+<li>Selesaikan collision tersebut menggunakan:<ul>
+<li>Linear Probing</li>
+<li>Quadratic Probing</li>
+<li>Chaining</li>
+</ul>
+</li>
+</ol>
+<p>Latihan ini dapat digunakan untuk membandingkan hasil dari setiap metode collision handling.</p>
+</div><div class="cell markdown"><hr />
+</div><div class="cell markdown"><h1>Tugas Hashing</h1>
+</div><div class="cell markdown"><h2>Anggota Kelompok:</h2>
+<ol>
+<li>Moh. Habdulbar (250411100120)</li>
+<li>Rayhan Zackiansyah (250411100126)</li>
+</ol>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code>data = [23, 12, 34, 45, 56, 67, 78]
+ukuran = 10
+hapus = &quot; &quot;
+
+def midSquare(angka):
+  hasil = angka ** 2
+  tengah = len(str(hasil)) // 2
+  index = int(str(hasil)[tengah]) % ukuran
+  return index
+    
+for angka in data:
+  print(angka, &quot;-&gt;&quot;, angka ** 2, &quot;-&gt; index&quot;, midSquare(angka))</code></pre><div class="output"><pre>23 -&gt; 529 -&gt; index 2
+12 -&gt; 144 -&gt; index 4
+34 -&gt; 1156 -&gt; index 5
+45 -&gt; 2025 -&gt; index 2
+56 -&gt; 3136 -&gt; index 3
+67 -&gt; 4489 -&gt; index 8
+78 -&gt; 6084 -&gt; index 8
+</pre></div></div><div class="cell markdown"><h2>Analisa Mid Square Function</h2>
+<ul>
+<li>Mid Square Function digunakan untuk menentukan index hash.</li>
+<li>Data dikuadratkan terlebih dahulu.</li>
+<li>Angka tengah dari hasil kuadrat digunakan sebagai index.</li>
+<li>Metode ini membantu penyebaran data agar lebih merata.</li>
+</ul>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># 1. Kasus Chaining (Close Adrress)
+# - insert
+# - cari --&gt; ketemu
+# - delete
+# - update
+
+print(&quot;=== CHAINING ===&quot;)
+
+def tampil(tabel):
+  print(tabel)
+
+def insertChain(tabel, angka):
+  index = midSquare(angka)
+  tabel[index].append(angka)
+
+def cariChain(tabel, angka):
+  index = midSquare(angka)
+
+  if angka in tabel[index]:
+    print(angka, &quot;ditemukan&quot;)
+  else:
+    print(angka, &quot;tidak ditemukan&quot;)
+
+def hapusChain(tabel, angka):
+  index = midSquare(angka)
+
+  if angka in tabel[index]:
+    tabel[index].remove(angka)
+    print(angka, &quot;berhasil dihapus&quot;)
+  else:
+    print(angka, &quot;tidak ditemukan&quot;)
+
+def updateChain(tabel, lama, baru):
+  index = midSquare(lama)
+
+  if lama in tabel[index]:
+    tabel[index].remove(lama)
+    insertChain(tabel, baru)
+    print(lama, &quot;diubah menjadi&quot;, baru)
+  else:
+    print(lama, &quot;tidak ditemukan&quot;)
+
+chain = [[] for i in range(ukuran)]
+
+for angka in data:
+  insertChain(chain, angka)
+
+print(&quot;Setelah insert:&quot;)
+tampil(chain)
+
+print(&quot;Cari 34:&quot;)
+cariChain(chain, 34)
+
+print(&quot;Hapus 34:&quot;)
+hapusChain(chain, 34)
+tampil(chain)
+
+print(&quot;Update 45 menjadi 99:&quot;)
+updateChain(chain, 45, 99)
+tampil(chain)
+
+print(&quot;Insert saat index sudah berisi:&quot;)
+insertChain(chain, 90)
+tampil(chain)</code></pre><div class="output"><pre>=== CHAINING ===
+Setelah insert:
+[[], [], [23, 45], [56], [12], [34], [], [], [67, 78], []]
+Cari 34:
+34 ditemukan
+Hapus 34:
+34 berhasil dihapus
+[[], [], [23, 45], [56], [12], [], [], [], [67, 78], []]
+Update 45 menjadi 99:
+45 diubah menjadi 99
+[[99], [], [23], [56], [12], [], [], [], [67, 78], []]
+Insert saat index sudah berisi:
+[[99, 90], [], [23], [56], [12], [], [], [], [67, 78], []]
+</pre></div></div><div class="cell markdown"><h2>Analisa</h2>
+<ul>
+<li>Chaining menangani collision dengan menyimpan beberapa data pada index yang sama.</li>
+<li>Setiap index berbentuk list sehingga dapat menyimpan lebih dari satu data.</li>
+<li>Data baru tetap dapat dimasukkan meskipun index sudah berisi data sebelumnya.</li>
+<li>Metode ini lebih fleksibel dalam menangani collision.</li>
+</ul>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># 2. Kasus Linear Probbing
+# - insert; penuh --&gt;
+# - cari (ref)
+# - delete
+# - update
+
+print(&quot;==LINEAR PROBING==&quot;)
+
+def insertLinear(tabel, angka):
+  idx = midSquare(angka)
+
+  for i in range(ukuran):
+    posisi = (idx + i) % ukuran
+
+    if tabel[posisi] is None or tabel[posisi] == hapus:
+      tabel[posisi] = angka
+      return
+
+  print(&quot;Tabel penuh, insert&quot;, angka, &quot;gagal&quot;)
+
+def cariLinear(tabel, angka):
+  idx = midSquare(angka)
+
+  for i in range(ukuran):
+    posisi = (idx + i) % ukuran
+
+    if tabel[posisi] is None:
+      print(angka, &quot;tidak ditemukan&quot;)
+      return -1
+
+    if tabel[posisi] == angka:
+      print(angka, &quot;ditemukan&quot;)
+      return posisi
+
+  print(angka, &quot;tidak ditemukan&quot;)
+  return -1
+
+def hapusLinear(tabel, angka):
+  posisi = cariLinear(tabel, angka)
+
+  if posisi != -1:
+    tabel[posisi] = hapus
+    print(angka, &quot;berhasil dihapus&quot;)
+
+def updateLinear(tabel, lama, baru):
+  posisi = cariLinear(tabel, lama)
+
+  if posisi != -1:
+    tabel[posisi] = hapus
+    insertLinear(tabel, baru)
+    print(lama, &quot;diubah menjadi&quot;, baru)
+
+lin = [None for i in range(ukuran)]
+
+for angka in data:
+  insertLinear(lin, angka)
+
+print(&quot;Setelah insert:&quot;)
+tampil(lin)
+
+print(&quot;Cari 34:&quot;)
+cariLinear(lin, 34)
+
+print(&quot;Hapus 34:&quot;)
+hapusLinear(lin, 34)
+tampil(lin)
+
+print(&quot;Update 45 menjadi 99:&quot;)
+updateLinear(lin, 45, 99)
+tampil(lin)
+
+print(&quot;Insert sampai penuh:&quot;)
+tambahan = [89, 90, 91, 92, 93]
+
+for angka in tambahan:
+  insertLinear(lin, angka)
+
+tampil(lin)</code></pre><div class="output"><pre>==LINEAR PROBING==
+Setelah insert:
+[None, None, 23, 45, 12, 34, 56, None, 67, 78]
+Cari 34:
+34 ditemukan
+Hapus 34:
+34 ditemukan
+34 berhasil dihapus
+[None, None, 23, 45, 12, &#x27; &#x27;, 56, None, 67, 78]
+Update 45 menjadi 99:
+45 ditemukan
+45 diubah menjadi 99
+[99, None, 23, &#x27; &#x27;, 12, &#x27; &#x27;, 56, None, 67, 78]
+Insert sampai penuh:
+Tabel penuh, insert 93 gagal
+[99, 90, 23, 89, 12, 91, 56, 92, 67, 78]
+</pre></div></div><div class="cell markdown"><h2>Analisa Linear Probing</h2>
+<ul>
+<li>Linear Probing menangani collision dengan mencari slot kosong berikutnya secara berurutan.</li>
+<li>Jika index utama terisi, data dipindahkan ke index kosong selanjutnya.</li>
+<li>Metode ini sederhana dan mudah dipahami.</li>
+<li>Linear Probing dapat menyebabkan penumpukan data pada area tertentu.</li>
+<li>Jika tabel penuh, proses insert akan gagal.</li>
+</ul>
+</div><div class="cell code"><div class="code-title">Kode</div><pre><code># 3. Kasus Quadratic Probbing
+# - insert; penuh--&gt;
+# - cari
+# - delete
+# - update
+
+print(&quot;== QUADRATIC PROBING ==&quot;)
+def insertQuadratic(tabel, angka):
+  index = midSquare(angka)
+
+  for i in range(ukuran):
+    posisi = (index + i * i) % ukuran
+
+    if tabel[posisi] is None or tabel[posisi] == hapus:
+      tabel[posisi] = angka
+      return
+
+  print(&quot;Tabel penuh, insert&quot;, angka, &quot;gagal&quot;)
+
+def cariQuadratic(tabel, angka):
+  index = midSquare(angka)
+
+  for i in range(ukuran):
+    posisi = (index + i * i) % ukuran
+
+    if tabel[posisi] is None:
+      print(angka, &quot;tidak ditemukan&quot;)
+      return -1
+
+    if tabel[posisi] == angka:
+      print(angka, &quot;ditemukan&quot;)
+      return posisi
+
+  print(angka, &quot;tidak ditemukan&quot;)
+  return -1
+
+def hapusQuadratic(tabel, angka):
+  posisi = cariQuadratic(tabel, angka)
+
+  if posisi != -1:
+    tabel[posisi] = hapus
+    print(angka, &quot;berhasil dihapus&quot;)
+
+def updateQuadratic(tabel, lama, baru):
+  posisi = cariQuadratic(tabel, lama)
+
+  if posisi != -1:
+    tabel[posisi] = hapus
+    insertQuadratic(tabel, baru)
+    print(lama, &quot;diubah menjadi&quot;, baru)
+
+quad = [None for i in range(ukuran)]
+
+for angka in data:
+  insertQuadratic(quad, angka)
+
+print(&quot;Setelah insert:&quot;)
+tampil(quad)
+
+print(&quot;Cari 34:&quot;)
+cariQuadratic(quad, 34)
+
+print(&quot;Hapus 34:&quot;)
+hapusQuadratic(quad, 34)
+tampil(quad)
+
+print(&quot;Update 45 menjadi 99:&quot;)
+updateQuadratic(quad, 45, 99)
+tampil(quad)
+
+print(&quot;Insert sampai penuh:&quot;)
+tambahan = [89, 90, 91, 92, 93]
+
+for angka in tambahan:
+  insertQuadratic(quad, angka)
+
+tampil(quad)</code></pre><div class="output"><pre>== QUADRATIC PROBING ==
+Setelah insert:
+[None, None, 23, 45, 12, 34, None, 56, 67, 78]
+Cari 34:
+34 ditemukan
+Hapus 34:
+34 ditemukan
+34 berhasil dihapus
+[None, None, 23, 45, 12, &#x27; &#x27;, None, 56, 67, 78]
+Update 45 menjadi 99:
+45 ditemukan
+45 diubah menjadi 99
+[99, None, 23, &#x27; &#x27;, 12, &#x27; &#x27;, None, 56, 67, 78]
+Insert sampai penuh:
+Tabel penuh, insert 91 gagal
+[99, 90, 23, 89, 12, 93, 92, 56, 67, 78]
+</pre></div></div><div class="cell markdown"><h2>Analisa Quadratic Probing</h2>
+<ul>
+<li>Quadratic Probing menangani collision menggunakan pola kuadrat <code>(i²)</code>.</li>
+<li>Slot kosong dicari menggunakan lompatan kuadrat.</li>
+<li>Penyebaran data menjadi lebih baik dibandingkan Linear Probing.</li>
+<li>Metode ini membantu mengurangi penumpukan data.</li>
+<li>Jika tabel penuh, proses insert akan gagal.</li>
+</ul>
+</div>
+</section>
+<div class="footer">C.2026 - Moch. Habdulbar</div>
+</main>
+</body>
+</html>
